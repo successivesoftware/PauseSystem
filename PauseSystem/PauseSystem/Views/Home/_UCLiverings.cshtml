@@ -1,19 +1,38 @@
 ﻿@model IEnumerable<PauseSystem.Models.Entity.Levering>
 
-<table>
-    <thead>
-        <tr>
-            <td>Date</td>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        { 
+<div class="table-primary">
+    <table class="table table-condensed">
+        <thead>
             <tr>
-                <td>
-                    @item.Date
-                </td>
+                <th>Antal</th>
+                <th>Varenr</th>
+                <th>Beskrivelse</th>
+                <th>Pris</th>
+                <th>Samplet pris</th>
             </tr>
-        }
-    </tbody>
-</table>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @item.Antal
+                    </td>
+                    <td>
+                        @item.Antal
+                    </td>
+                    <td>
+                        @item.Antal
+                    </td>
+                    <td>
+                        @item.Pris
+                    </td>
+                    <td>
+                        @item.Pris
+                    </td>
+
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
