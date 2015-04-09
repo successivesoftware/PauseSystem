@@ -3,10 +3,17 @@
 <table>
     <thead>
         <tr>
-            <td></td>
+            <td>Date</td>
         </tr>
     </thead>
     <tbody>
-        
+        @foreach (var item in Model)
+        { 
+            <tr>
+                <td>
+                    @item.Date
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
