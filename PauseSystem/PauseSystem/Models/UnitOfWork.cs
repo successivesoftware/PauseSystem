@@ -6,10 +6,20 @@ using System.Web;
 
 namespace PauseSystem.Models
 {
-    public class UnitOfWork : IDisposable
+    public interface IUnitOfWork
+    {
+        void Dispose();
+        void Save();
+        void Dispose(bool disposing);
+        IRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
+    }
+
+    public class UnitOfWork : IUnitOfWork, IDisposable
     {
         private readonly FrugtContext context;
+        
         private bool disposed;
+
         private Dictionary<string, object> repositories;
         public UnitOfWork(FrugtContext context)
         {
@@ -39,7 +49,7 @@ namespace PauseSystem.Models
             }
             this.disposed = true;
         }
-        public Repository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
+        public IRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity
         {
             if (this.repositories == null)
             {
@@ -50,15 +60,15 @@ namespace PauseSystem.Models
             {
                 Type typeFromHandle = typeof(Repository<>);
                 object value = Activator.CreateInstance(typeFromHandle.MakeGenericType(new Type[]
-				{
-					typeof(TEntity)
-				}), new object[]
-				{
-					this.context
-				});
+                {
+                    typeof(TEntity)
+                }), new object[]
+                {
+                    this.context
+                });
                 this.repositories.Add(name, value);
             }
-            return (Repository<TEntity>)this.repositories[name];
+            return (IRepository<TEntity>)this.repositories[name];
         }
 
 

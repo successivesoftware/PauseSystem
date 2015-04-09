@@ -12,11 +12,10 @@ namespace PauseSystem.Controllers
     public class HomeController : Controller
     {
         UnitOfWork unitOfWork = new UnitOfWork();
-        Repository<Levering> leveringRepository;
 
         public HomeController()
         {
-            this.leveringRepository = unitOfWork.Repository<Levering>();
+
         }
 
         [AllowAnonymous]
@@ -28,12 +27,8 @@ namespace PauseSystem.Controllers
         [ChildActionOnly]
         public PartialViewResult GetLeverings()
         {
-            var items = leveringRepository.Table.Take(10).ToList();
+            var items = unitOfWork.Repository<TurLevering>().GetDeliveries();
             return PartialView("_UCLiverings", items);
-
-
-
-
         }
 
         [Authorize(Roles=UserRoleTypes.Customer)]

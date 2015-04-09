@@ -14,5 +14,7 @@ namespace PauseSystem.Models.Entity
         public Nullable<bool> PrintPakkeListe { get; set; }
         public Nullable<int> SkipReasonId { get; set; }
         public Nullable<int> AbonnementId { get; set; }
+
+        public virtual Adresser Adresser { get; set; }
     }
 }

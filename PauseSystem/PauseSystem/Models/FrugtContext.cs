@@ -5,7 +5,17 @@ using PauseSystem.Models.Entity;
 
 namespace PauseSystem.Models
 {
-    public partial class FrugtContext : DbContext
+
+    //public interface IDbContext
+    //{
+    //   // IDbSet<T> Set<T>() where T : class;
+    //    int SaveChanges();
+    //    DbEntityEntry Entry(object o);
+    //    void Dispose();
+    //}
+
+
+    public class FrugtContext : DbContext
     {
         static FrugtContext()
         {
@@ -15,6 +25,13 @@ namespace PauseSystem.Models
         public FrugtContext()
             : base("Name=FrugtContext")
         {
+        }
+
+       
+
+        public override int SaveChanges()
+        {
+            return base.SaveChanges();
         }
 
         public DbSet<AbbonnementProduktPause> AbbonnementProduktPauses { get; set; }

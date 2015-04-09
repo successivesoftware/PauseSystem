@@ -291,6 +291,7 @@
     <Compile Include="Models\Entity\VersionLog.cs" />
     <Compile Include="Models\Entity\Week.cs" />
     <Compile Include="Models\Repository.cs" />
+    <Compile Include="Models\RepositoryExtentions.cs" />
     <Compile Include="Models\TEntity.cs" />
     <Compile Include="Models\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

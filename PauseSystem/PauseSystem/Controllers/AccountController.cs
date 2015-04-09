@@ -17,8 +17,8 @@ namespace PauseSystem.Controllers
     public class AccountController : Controller
     {
         private UnitOfWork unitOfWork = new UnitOfWork();
-        private Repository<Medarbejdere> medarbejdereRepository;
-        private Repository<Kunde> KundeRepository;
+        private IRepository<Medarbejdere> medarbejdereRepository;
+        private IRepository<Kunde> KundeRepository;
 
         public AccountController()
         {

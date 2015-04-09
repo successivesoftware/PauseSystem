@@ -22,6 +22,12 @@ namespace PauseSystem.Models.Mapping
             this.Property(t => t.PrintPakkeListe).HasColumnName("PrintPakkeListe");
             this.Property(t => t.SkipReasonId).HasColumnName("SkipReasonId");
             this.Property(t => t.AbonnementId).HasColumnName("AbonnementId");
+
+            this.HasRequired(x => x.Adresser).WithMany().HasForeignKey(x => x.AdresseId);
+
+
+
+
         }
     }
 }
