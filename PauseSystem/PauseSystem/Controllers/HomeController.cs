@@ -30,6 +30,10 @@ namespace PauseSystem.Controllers
         {
             var items = leveringRepository.Table.Take(10).ToList();
             return PartialView("_UCLiverings", items);
+
+
+
+
         }
 
         [Authorize(Roles=UserRoleTypes.Customer)]
