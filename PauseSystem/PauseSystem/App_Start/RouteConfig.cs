@@ -13,11 +13,24 @@ namespace PauseSystem
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
+           
             routes.MapRoute(
-                name: "Default",
-                url: "{controller}/{action}/{id}",
-                defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+                name: "Login",
+                url: "Login",
+                defaults : new { controller = "Account", action = "Login" }
             );
+            routes.MapRoute(
+                name: "LogOff",
+                url: "LogOff",
+                defaults: new { controller = "Account", action = "LogOff" }
+            );
+
+            routes.MapRoute(
+               name: "Default",
+               url: "{controller}/{action}/{id}",
+               defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
+           );
+
         }
     }
 }

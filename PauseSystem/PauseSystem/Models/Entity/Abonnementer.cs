@@ -11,7 +11,7 @@ namespace PauseSystem.Models.Entity
         public Nullable<int> RuteIndex { get; set; }
         public Nullable<int> LeveringsAdresseId { get; set; }
         public Nullable<System.DateTime> DeliveryTime { get; set; }
-        public Nullable<int> KundeId { get; set; }
+        public int KundeId { get; set; }
         public Nullable<int> KundeNr { get; set; }
         public Nullable<System.DateTime> StartDato { get; set; }
         public Nullable<System.DateTime> SlutDato { get; set; }
@@ -22,7 +22,17 @@ namespace PauseSystem.Models.Entity
         public Nullable<int> ProduktNr { get; set; }
         public Nullable<int> Interval { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
-        public Nullable<bool> PrintPakkeList { get; set; }
+        public bool PrintPakkeList { get; set; }
         public Nullable<System.DateTime> PrintPakkeDato { get; set; }
+
+    //    public virtual AbonnementRute AbonnementRute { get; set; }
+        public virtual ICollection<AbonnementProdukt> AbonnementProdukts { get; set; }
+        public virtual ICollection<AbonnementChange> AbonnementChanges { get; set; }
+
+        public virtual Adresser LeveringsAdresser { get; set; }
+        public virtual Kunde Kunde { get; set; }
+
+
+
     }
 }

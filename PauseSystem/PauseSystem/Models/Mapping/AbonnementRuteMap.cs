@@ -17,7 +17,7 @@ namespace PauseSystem.Models.Mapping
             // Table & Column Mappings
             this.ToTable("AbonnementRute");
             this.Property(t => t.RuteId).HasColumnName("RuteId");
-            this.Property(t => t.DayOfWeek).HasColumnName("DayOfWeek");
+            this.Property(t => t.Ugedag).HasColumnName("DayOfWeek");
             this.Property(t => t.Chauffør).HasColumnName("Chauffør");
             this.Property(t => t.StartAdresse).HasColumnName("StartAdresse");
             this.Property(t => t.AbIndex).HasColumnName("AbIndex");

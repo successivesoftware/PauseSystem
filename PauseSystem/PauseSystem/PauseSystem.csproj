@@ -162,7 +162,9 @@
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
+    <Compile Include="Helpers\DateTimeHelper.cs" />
     <Compile Include="Helpers\PauseSecurity.cs" />
+    <Compile Include="Helpers\TimeTool.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CustomerDelivery.cs" />
     <Compile Include="Models\Entity\AbbonnementProduktPause.cs" />
@@ -187,6 +189,8 @@
     <Compile Include="Models\Entity\DriverMessage.cs" />
     <Compile Include="Models\Entity\ExternFragt.cs" />
     <Compile Include="Models\Entity\ExternFragtChauffør.cs" />
+    <Compile Include="Models\Enums.cs" />
+    <Compile Include="Models\Extensions\AbonnementExtensions.cs" />
     <Compile Include="Models\FrugtContext.cs" />
     <Compile Include="Models\Entity\Grossister.cs" />
     <Compile Include="Models\Entity\Grøntkasse.cs" />
@@ -292,7 +296,7 @@
     <Compile Include="Models\Entity\VersionLog.cs" />
     <Compile Include="Models\Entity\Week.cs" />
     <Compile Include="Models\Repository.cs" />
-    <Compile Include="Models\RepositoryExtentions.cs" />
+    <Compile Include="Models\Extensions\RepositoryExtentions.cs" />
     <Compile Include="Models\TEntity.cs" />
     <Compile Include="Models\UnitOfWork.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

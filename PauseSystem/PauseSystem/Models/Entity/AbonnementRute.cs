@@ -5,8 +5,11 @@ namespace PauseSystem.Models.Entity
 {
     public partial class AbonnementRute : BaseEntity
     {
-        public Nullable<int> RuteId { get; set; }
-        public Nullable<int> DayOfWeek { get; set; }
+        public int RuteId { get; set; }
+     //   public Nullable<int> DayOfWeek { get; set; }
+
+        public DayOfWeek Ugedag { get; set; }
+
         public Nullable<int> Chauffør { get; set; }
         public Nullable<int> StartAdresse { get; set; }
         public Nullable<int> AbIndex { get; set; }
