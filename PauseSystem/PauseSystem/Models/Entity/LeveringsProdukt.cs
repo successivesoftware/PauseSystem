@@ -7,7 +7,7 @@ namespace PauseSystem.Models.Entity
     {
         
         public int LeveringsId { get; set; }
-        public int ProduktId { get; set; }
+        public int ProduktNr { get; set; }
         public double SalgsPris { get; set; }
         public double KostPris { get; set; }
         public double GrossistPris { get; set; }
@@ -20,5 +20,10 @@ namespace PauseSystem.Models.Entity
         public Nullable<int> DeliveredAntal { get; set; }
         public Nullable<int> DeliveryProductCountDiffReasonId { get; set; }
         public Nullable<int> GrøntkasseId { get; set; }
+
+        public virtual Produkt Produkt { get; set; }
+        public virtual TurLevering TurLevering { get; set; }
+
+
     }
 }

@@ -18,7 +18,7 @@ namespace PauseSystem.Models.Mapping
             this.ToTable("LeveringsProdukt");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.LeveringsId).HasColumnName("LeveringsId");
-            this.Property(t => t.ProduktId).HasColumnName("ProduktId");
+            this.Property(t => t.ProduktNr).HasColumnName("ProduktId");
             this.Property(t => t.SalgsPris).HasColumnName("SalgsPris");
             this.Property(t => t.KostPris).HasColumnName("KostPris");
             this.Property(t => t.GrossistPris).HasColumnName("GrossistPris");
@@ -31,6 +31,12 @@ namespace PauseSystem.Models.Mapping
             this.Property(t => t.DeliveredAntal).HasColumnName("DeliveredAntal");
             this.Property(t => t.DeliveryProductCountDiffReasonId).HasColumnName("DeliveryProductCountDiffReasonId");
             this.Property(t => t.GrøntkasseId).HasColumnName("GrøntkasseId");
+
+            this.HasRequired(x => x.TurLevering).WithMany().HasForeignKey(x => x.LeveringsId);
+            this.HasRequired(x => x.Produkt).WithMany().HasForeignKey(x => x.ProduktNr);
+
+           
+
         }
     }
 }

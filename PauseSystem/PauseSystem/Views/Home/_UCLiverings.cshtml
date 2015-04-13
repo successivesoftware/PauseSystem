@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PauseSystem.Models.Entity.TurLevering>
+﻿@model IEnumerable<PauseSystem.Models.CustomerDelivery>
 
 <div class="table-primary">
     <table class="table table-condensed">
@@ -16,19 +16,23 @@
             {
                 <tr>
                     <td>
-                        @item.KundeId
+                        @item.Antal
                         @*@item.Antal*@
                     </td>
                     <td>
+                        @item.VareNr
                         @*@item.Antal*@
                     </td>
                     <td>
+                        @item.Beskrivelse
                         @*@item.Antal*@
                     </td>
                     <td>
+                        @item.Pris
                         @*@item.Pris*@
                     </td>
                     <td>
+                        @item.SampletPris
                         @*@item.Pris*@
                     </td>
 

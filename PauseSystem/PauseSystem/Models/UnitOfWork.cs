@@ -9,7 +9,7 @@ namespace PauseSystem.Models
     public interface IUnitOfWork
     {
         void Dispose();
-        void Save();
+        void Commit();
         void Dispose(bool disposing);
         IRepository<TEntity> Repository<TEntity>() where TEntity : BaseEntity;
     }
@@ -34,7 +34,7 @@ namespace PauseSystem.Models
             this.Dispose(true);
             GC.SuppressFinalize(this);
         }
-        public void Save()
+        public void Commit()
         {
             this.context.SaveChanges();
         }

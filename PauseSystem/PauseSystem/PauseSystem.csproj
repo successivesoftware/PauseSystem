@@ -164,6 +164,7 @@
     </Compile>
     <Compile Include="Helpers\PauseSecurity.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CustomerDelivery.cs" />
     <Compile Include="Models\Entity\AbbonnementProduktPause.cs" />
     <Compile Include="Models\Entity\AbbPauser.cs" />
     <Compile Include="Models\Entity\AbonnementChange.cs" />

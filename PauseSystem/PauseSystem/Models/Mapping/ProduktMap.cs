@@ -8,7 +8,9 @@ namespace PauseSystem.Models.Mapping
         public ProduktMap()
         {
             // Primary Key
-            this.HasKey(t => t.Id);
+            this.HasKey(t => t.ProduktNr);
+
+            this.Property(x => x.Id).HasColumnName("Id").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity).IsRequired();
 
             // Properties
             this.Property(t => t.Navn)
@@ -31,7 +33,7 @@ namespace PauseSystem.Models.Mapping
 
             // Table & Column Mappings
             this.ToTable("Produkt");
-            this.Property(t => t.ProduktNr).HasColumnName("ProduktNr");
+            this.Property(t => t.ProduktNr).HasColumnName("ProduktNr").HasDatabaseGeneratedOption(DatabaseGeneratedOption.None).IsRequired();
             this.Property(t => t.Navn).HasColumnName("Navn");
             this.Property(t => t.Beskrivelse).HasColumnName("Beskrivelse");
             this.Property(t => t.stk).HasColumnName("stk");

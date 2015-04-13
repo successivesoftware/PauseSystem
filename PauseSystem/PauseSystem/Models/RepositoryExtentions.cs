@@ -8,15 +8,20 @@ namespace PauseSystem.Models
 {
     public static class RepositoryExtentions
     {
-        public static IList<TurLevering> GetDeliveries(this IRepository<TurLevering> repository)
+        public static IList<CustomerDelivery> GetDeliveries(this IRepository<LeveringsProdukt> repository, int? kundeId, DateTime? startDate, DateTime? endDate)
         {
-            return repository.AsQuerable().Take(10).ToList();
+            var query = repository.AsQuerable();
+            if (startDate.HasValue)
+                query = query.Where(x => x.TurLevering.Ture.Dato.Value > startDate);
+            return query.Take(20).Select(x => new CustomerDelivery
+            {
+                Antal = x.Antal,
+                VareNr = x.ProduktNr,
+                Beskrivelse = x.Produkt.Navn.ToString(), //.Navn,
+                Pris = x.SalgsPris,
+                SampletPris = x.SalgsPris
+            }).ToList();
 
-            
-            //return repository
-            //    .FindById(customerId)
-            //    .Orders.SelectMany(o => o.OrderDetails)
-            //    .Select(o => o.Quantity * o.UnitPrice).Sum();
         }
 
     }

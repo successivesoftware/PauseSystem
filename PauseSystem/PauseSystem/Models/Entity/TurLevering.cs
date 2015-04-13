@@ -16,5 +16,11 @@ namespace PauseSystem.Models.Entity
         public Nullable<int> AbonnementId { get; set; }
 
         public virtual Adresser Adresser { get; set; }
+        public virtual Kunde Kunde { get; set; }
+        public virtual Ture Ture { get; set; }
+
+
+
+
     }
 }

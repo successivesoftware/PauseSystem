@@ -27,7 +27,9 @@ namespace PauseSystem.Controllers
         [ChildActionOnly]
         public PartialViewResult GetLeverings()
         {
-            var items = unitOfWork.Repository<TurLevering>().GetDeliveries();
+            
+            var items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(null,null,null);
+
             return PartialView("_UCLiverings", items);
         }
 
