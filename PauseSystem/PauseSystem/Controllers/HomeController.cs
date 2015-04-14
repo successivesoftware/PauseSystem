@@ -25,12 +25,47 @@ namespace PauseSystem.Controllers
             return View();
         }
 
+        [AcceptVerbs(HttpVerbs.Post)]
+        public PartialViewResult getLeverings(DateTime StartDate, DateTime EndDate)
+        {
+            int kundeId = PauseSecurity.GetUserId();
+            DateTime startDate = StartDate;
+            DateTime endDate = EndDate;
+            IList<CustomerDelivery> items;
+            if (User.IsInRole(UserRoleTypes.Employee))
+            {
+                items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForAdmin(unitOfWork, startDate, endDate);
+            }
+            else
+            {
+                items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForCustomer(unitOfWork, kundeId, startDate, endDate);
+            }
+            var adresse = unitOfWork.Repository<Adresser>().AsQuerable().Where(x => x.KundeId == kundeId)
+                                            .Select(x => new { address = x.Adresse + ", " + x.PostNr + ", " + x.City });
+
+            foreach (var address in adresse)
+            {
+                ViewBag.Adresse = address.address;
+            }
+
+            return PartialView("_UCLiverings2", items);
+        }
+
         [ChildActionOnly]
         public PartialViewResult GetLeverings()
         {
-            int kundeId = 0;
-            DateTime startDate = DateTime.Now.AddHours(-100), endDate = DateTime.Now.AddDays(100);
-
+            int kundeId = PauseSecurity.GetUserId();
+            DateTime startDate = DateTime.Now;
+            DateTime endDate = DateTime.Now;
+            IList<CustomerDelivery> items;
+            if (User.IsInRole(UserRoleTypes.Employee))
+            {
+                items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForAdmin(unitOfWork, startDate, endDate);
+            }
+            else
+            {
+                items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForCustomer(unitOfWork, kundeId, startDate, endDate);
+            }
 
             //if (maxDate.Date < endDate.Date)
             //{
@@ -79,15 +114,18 @@ namespace PauseSystem.Controllers
             //}).ToList();
 
 
+            var adresse = unitOfWork.Repository<Adresser>().AsQuerable().Where(x => x.KundeId == kundeId)
+                                            .Select(x => new { address = x.Adresse + ", " + x.PostNr + ", " + x.City });
 
-
-
-            var items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork,kundeId, startDate,endDate);
+            foreach (var address in adresse)
+            {
+                ViewBag.Adresse = address.address;
+            }
 
             return PartialView("_UCLiverings", items);
         }
 
-        [Authorize(Roles=UserRoleTypes.Customer)]
+        [Authorize(Roles = UserRoleTypes.Customer)]
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";

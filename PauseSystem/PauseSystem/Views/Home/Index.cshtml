@@ -8,50 +8,51 @@
         Hej @(PauseSecurity.GetFullName()) Du kan nu afmelde de dage hvor du ikke ønsker frugt.
         Afmeldning gælder for alle varer som normalt leveres på den pågælende dato.
         Ønker du stadig levering af frugt, men i mindre mængder, så kontakt os venligst på 32 200 777 eller på salg@firmafrugt.com
-
+        <br /><br />
         Når du logger ud, vil du modtage en opdateret leveringsoversigt hvor du kan se din kommende leveringer.
 
         <h4>Leveringsadresser</h4>
 
         <div class="form-horizontal">
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="col-sm-5 control-label">Startdato:</label>
-                    <div class="col-sm-7">
-                        <div class="input-group input-append date">
-                            @Html.TextBox("StartDate", null, htmlAttributes: new { @class = "form-control", title = "Startdato" })
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+            @using (Html.BeginForm("GetLeverings", "Home", FormMethod.Post))
+            {
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-sm-5 control-label">Startdato:</label>
+                        <div class="col-sm-7">
+                            <div class="input-group input-append date">
+                                @Html.TextBox("StartDate", DateTime.Today.ToString("d"), htmlAttributes: new { @class = "form-control", title = "Startdato" })
+                                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
-
-            <div class="col-md-4">
-                <div class="form-group">
-                    <label class="col-xs-5 control-label">Slutdato:</label>
-                    <div class="col-xs-7">
-                        <div class="input-group input-append date">
-                            @Html.TextBox("EndDate", null, htmlAttributes: new { @class = "form-control", title = "Slutdato" })
-                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                <div class="col-md-4">
+                    <div class="form-group">
+                        <label class="col-xs-5 control-label">Slutdato:</label>
+                        <div class="col-xs-7">
+                            <div class="input-group input-append date">
+                                @Html.TextBox("EndDate", DateTime.Today.AddMonths(1).ToString("d"), htmlAttributes: new { @class = "form-control", title = "Slutdato" })
+                                <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                            </div>
                         </div>
                     </div>
+
                 </div>
 
-            </div>
-
-            <div class="col-md-4">
-                <button class="btn btn-primary">Hent leveringer</button>
-            </div>
-
+                <div class="col-md-4">
+                    <button class="btn btn-primary">Hent leveringe</button>
+                </div>
+            }
         </div>
 
         <div class="clearfix"></div>
         @{
-            Html.RenderAction("GetLeverings");
-          }
-        
+    Html.RenderAction("GetLeverings", new {StartDate = Convert.ToDateTime(DateTime.Today.ToString("d")), EndDate = Convert.ToDateTime(DateTime.Today.AddMonths(1).ToString("d")) });
+        }
+
 
     </div>
 
@@ -72,7 +73,7 @@ else
 <script type="text/javascript">
     $(document).ready(function () {
         $('.date').datepicker({
-            format: 'mm/dd/yyyy',
+            format: 'dd/mm/yyyy',
             startDate: '-3d',
             orientation: "top auto",
             autoclose: true

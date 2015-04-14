@@ -33,6 +33,14 @@ namespace PauseSystem.Controllers
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
+
+            if (Request.QueryString.HasKeys() && Request.QueryString["kundenr"] != null && Request.QueryString["guid"] != null
+                && SignIn(Request["kundenr"], Request["guid"], false)
+                )
+            {
+                return RedirectToLocal(returnUrl);
+            }
+
             return View();
         }
 
@@ -49,14 +57,15 @@ namespace PauseSystem.Controllers
             }
             if (SignIn(model.Username, model.Password,model.RememberMe))
             {
-                return RedirectToLocal(returnUrl);
+              return RedirectToLocal(returnUrl);
             }
             return View(model);
 
         }
 
         private bool SignIn(string userName,string password,bool rememberMe)
-        {
+        {  
+            
             var muser = medarbejdereRepository.Get(m => (m.Fornavn == userName && m.Password == password)
                 || (m.SugarUser == userName && m.SugarPassword == password)).FirstOrDefault();
             if (muser != null)
@@ -71,6 +80,8 @@ namespace PauseSystem.Controllers
                 PauseSecurity.Login(new PauseIdentity(kuser.Id, kuser.Navn,kuser.Navn, new List<string> { UserRoleTypes.Customer }), rememberMe);
                 return true;
             }
+
+
             return false;
 
         }

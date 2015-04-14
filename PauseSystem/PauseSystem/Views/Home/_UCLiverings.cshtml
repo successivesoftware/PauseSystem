@@ -1,43 +1,47 @@
 ﻿@model IEnumerable<PauseSystem.Models.CustomerDelivery>
 
-<div class="table-primary">
-    <table class="table table-condensed">
-        <thead>
-            <tr>
-                <th>Antal</th>
-                <th>Varenr</th>
-                <th>Beskrivelse</th>
-                <th>Pris</th>
-                <th>Samplet pris</th>
-            </tr>
-        </thead>
-        <tbody>
-            @foreach (var item in Model)
-            {
+    <div class="col-md-0">
+        Adresse: @ViewBag.Adresse
+    </div>
+    
+    <div class="table-primary">
+        <table class="table table-bordered table-hover table-striped table-condensed">
+            <thead>
                 <tr>
-                    <td>
-                        @item.Antal
-                        @*@item.Antal*@
-                    </td>
-                    <td>
-                        @item.VareNr
-                        @*@item.Antal*@
-                    </td>
-                    <td>
-                        @item.Beskrivelse
-                        @*@item.Antal*@
-                    </td>
-                    <td>
-                        @item.Pris
-                        @*@item.Pris*@
-                    </td>
-                    <td>
-                        @item.SampletPris
-                        @*@item.Pris*@
-                    </td>
-
+                    <th><a href="http://localhost:1344/Home/SortTable?name=Antal">Antal</a></th>
+                    <th><a href="http://localhost:1344/Home/SortTable?name=VareNr">Varenr</a></th>
+                    <th><a href="http://localhost:1344/Home/SortTable?name=Beskrivelse">Beskrivelse</a></th>
+                    <th><a href="http://localhost:1344/Home/SortTable?name=Pris">Pris</a></th>
+                    <th><a href="http://localhost:1344/Home/SortTable?name=SampletPris">Samplet pris</a></th>
                 </tr>
-            }
-        </tbody>
-    </table>
-</div>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @item.Antal
+                            @*@item.Antal*@
+                        </td>
+                        <td>
+                            @item.VareNr
+                            @*@item.Antal*@
+                        </td>
+                        <td>
+                            @item.Beskrivelse
+                            @*@item.Antal*@
+                        </td>
+                        <td>
+                            @item.Pris
+                            @*@item.Pris*@
+                        </td>
+                        <td>
+                            @item.SampletPris
+                            @*@item.Pris*@
+                        </td>
+
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>

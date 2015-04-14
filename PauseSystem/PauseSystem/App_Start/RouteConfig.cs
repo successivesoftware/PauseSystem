@@ -19,10 +19,11 @@ namespace PauseSystem
                 url: "Login",
                 defaults : new { controller = "Account", action = "Login" }
             );
+
             routes.MapRoute(
                 name: "LogOff",
-                url: "LogOff",
-                defaults: new { controller = "Account", action = "LogOff" }
+                url: "LogOff/{optional}",
+                defaults: new { controller = "Account", action = "LogOff", optional = UrlParameter.Optional }
             );
 
             routes.MapRoute(

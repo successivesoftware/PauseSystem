@@ -8,7 +8,24 @@ namespace PauseSystem.Models.Entity
 {
     public static class RepositoryExtentions
     {
-        public static IList<CustomerDelivery> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork, int kundeId, DateTime startDate, DateTime endDate)
+
+        public static IList<CustomerDelivery> GetDeliveriesForAdmin(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork, DateTime startDate, DateTime endDate)
+        {
+            var finalProdukter = new List<LeveringsProdukt>();
+            var qLeveringsProdukt = repository.AsQuerable();
+            qLeveringsProdukt = qLeveringsProdukt.Where(x => x.TurLevering.Ture.Dato >= startDate && x.TurLevering.Ture.Dato <= endDate);
+
+            return qLeveringsProdukt.Take(20).Select(x => new CustomerDelivery
+            {
+                Antal = x.Antal,
+                VareNr = x.ProduktNr,
+                Beskrivelse = x.Produkt.Navn,
+                Pris = x.SalgsPris,
+                SampletPris = x.SalgsPris
+            }).ToList();
+        }
+
+        public static IList<CustomerDelivery> GetDeliveriesForCustomer(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork, int kundeId, DateTime startDate, DateTime endDate)
         {
             var finalProdukter = new List<LeveringsProdukt>();
             var qLeveringsProdukt = repository.AsQuerable();
@@ -18,7 +35,7 @@ namespace PauseSystem.Models.Entity
             {
                 Antal = x.Antal,
                 VareNr = x.ProduktNr,
-                Beskrivelse = x.Produkt.Navn.ToString(), //.Navn,
+                Beskrivelse = x.Produkt.Navn,
                 Pris = x.SalgsPris,
                 SampletPris = x.SalgsPris
             }).ToList();
