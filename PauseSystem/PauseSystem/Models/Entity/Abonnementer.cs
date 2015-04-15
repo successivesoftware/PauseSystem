@@ -6,10 +6,10 @@ namespace PauseSystem.Models.Entity
     public partial class Abonnementer : BaseEntity
     {
         
-        public Nullable<int> Ugedag { get; set; }
+        public DayOfWeek Ugedag { get; set; }
         public Nullable<int> RuteNr { get; set; }
-        public Nullable<int> RuteIndex { get; set; }
-        public Nullable<int> LeveringsAdresseId { get; set; }
+        public int RuteIndex { get; set; }
+        public int LeveringsAdresseId { get; set; }
         public Nullable<System.DateTime> DeliveryTime { get; set; }
         public int KundeId { get; set; }
         public Nullable<int> KundeNr { get; set; }
@@ -25,7 +25,7 @@ namespace PauseSystem.Models.Entity
         public bool PrintPakkeList { get; set; }
         public Nullable<System.DateTime> PrintPakkeDato { get; set; }
 
-    //    public virtual AbonnementRute AbonnementRute { get; set; }
+        public virtual AbonnementRute AbonnementRute { get; set; }
         public virtual ICollection<AbonnementProdukt> AbonnementProdukts { get; set; }
         public virtual ICollection<AbonnementChange> AbonnementChanges { get; set; }
 

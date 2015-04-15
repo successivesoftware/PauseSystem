@@ -14,14 +14,14 @@
         <h4>Leveringsadresser</h4>
 
         <div class="form-horizontal">
-            @using (Html.BeginForm("GetLeverings", "Home", FormMethod.Post))
+            @using (Html.BeginForm(null, null, FormMethod.Get))
             {
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label class="col-sm-5 control-label">Startdato:</label>
-                        <div class="col-sm-7">
+                        <label class="col-sm-3 control-label">Startdato:</label>
+                        <div class="col-sm-9">
                             <div class="input-group input-append date">
-                                @Html.TextBox("StartDate", DateTime.Today.ToString("d"), htmlAttributes: new { @class = "form-control", title = "Startdato" })
+                                @Html.TextBox("StartDate", (string)ViewBag.StartDate, new { @class = "form-control", title = "Startdato", required = true})
                                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                         </div>
@@ -29,12 +29,12 @@
 
                 </div>
 
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="form-group">
-                        <label class="col-xs-5 control-label">Slutdato:</label>
-                        <div class="col-xs-7">
+                        <label class="col-xs-3 control-label">Slutdato:</label>
+                        <div class="col-xs-9">
                             <div class="input-group input-append date">
-                                @Html.TextBox("EndDate", DateTime.Today.AddMonths(1).ToString("d"), htmlAttributes: new { @class = "form-control", title = "Slutdato" })
+                                @Html.TextBox("EndDate", (string)ViewBag.EndDate, htmlAttributes: new { @class = "form-control required", title = "Slutdato" })
                                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
                         </div>
@@ -49,9 +49,9 @@
         </div>
 
         <div class="clearfix"></div>
-        @{
-    Html.RenderAction("GetLeverings", new {StartDate = Convert.ToDateTime(DateTime.Today.ToString("d")), EndDate = Convert.ToDateTime(DateTime.Today.AddMonths(1).ToString("d")) });
-        }
+        @{Html.RenderPartial("_UCLiverings");}
+
+        @*//Html.RenderAction("GetLeverings", new {StartDate = Convert.ToDateTime(DateTime.Today.ToString("d")), EndDate = Convert.ToDateTime(DateTime.Today.AddMonths(1).ToString("d")) });*@
 
 
     </div>
@@ -72,16 +72,7 @@ else
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $('.date').datepicker({
-            format: 'dd/mm/yyyy',
-            startDate: '-3d',
-            orientation: "top auto",
-            autoclose: true
-        })
-        //    .on('changeDate', function (e) {
-        //    // Revalidate the date field
-        //    $('.datepicker').close();
-        //});
+        global.initdatepicker('.date');
     })
 
 </script>

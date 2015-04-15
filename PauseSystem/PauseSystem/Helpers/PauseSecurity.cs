@@ -9,6 +9,8 @@ using System.Web;
 
 namespace PauseSystem
 {
+
+
     public static class PauseSecurity
     {
         private static System.Security.Principal.IIdentity Identity
@@ -27,8 +29,6 @@ namespace PauseSystem
             }
         }
 
-
-
         public static void Login(PauseIdentity pauseIndentity, bool isPersistant = false)
         {
            // var claimsIdentity = new PauseIdentity(userId, username, new List<string> { "user" });
@@ -42,7 +42,6 @@ namespace PauseSystem
         {
             AuthenticationManager.SignOut();
         }
-
 
         public static string GetUserName()
         {
@@ -59,7 +58,6 @@ namespace PauseSystem
             return Identity.GetUserId<int>();
         }
 
-
         public static bool IsAuthenticated
         {
             get
@@ -68,6 +66,10 @@ namespace PauseSystem
             }
         }
 
+        public static bool IsInRole(string roleType)
+        {
+            return AuthenticationManager.User.HasClaim(x => x.Type == ClaimTypes.Role && x.Value == roleType);
+        }
 
 
         //Id = Guid.NewGuid().ToString();
@@ -140,7 +142,6 @@ namespace PauseSystem
 
     public class PauseIdentity : ClaimsIdentity
     {
-
         public PauseIdentity(int userId, string username, string name, IEnumerable<string> roles):base(DefaultAuthenticationTypes.ApplicationCookie)
         {
             AddClaims(roles.Select(role => new Claim(ClaimTypes.Role, role)));
@@ -190,7 +191,7 @@ namespace PauseSystem
 
     }
 
-    public class UserRoleTypes
+    public class RoleTypes
     {
         public const string Customer = "Customer";
         public const string Employee = "Employee";

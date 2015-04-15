@@ -70,14 +70,14 @@ namespace PauseSystem.Controllers
                 || (m.SugarUser == userName && m.SugarPassword == password)).FirstOrDefault();
             if (muser != null)
             {
-                PauseSecurity.Login(new PauseIdentity(muser.Id, muser.Fornavn, muser.Fornavn + " " + muser.EfterNavn, new List<string> { UserRoleTypes.Employee }), rememberMe);
+                PauseSecurity.Login(new PauseIdentity(muser.Id, muser.Fornavn, muser.Fornavn + " " + muser.EfterNavn, new List<string> { RoleTypes.Employee }), rememberMe);
                 return true;
             }
              int kundenr = 0;
             if(int.TryParse(userName,out kundenr))
             {
                 var kuser = KundeRepository.Get(k => k.KundeNr == kundenr && k.AfmeldingsPass == password).FirstOrDefault();
-                PauseSecurity.Login(new PauseIdentity(kuser.Id, kuser.Navn,kuser.Navn, new List<string> { UserRoleTypes.Customer }), rememberMe);
+                PauseSecurity.Login(new PauseIdentity(kuser.Id, kuser.Navn,kuser.Navn, new List<string> { RoleTypes.Customer }), rememberMe);
                 return true;
             }
 

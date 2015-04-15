@@ -26,12 +26,7 @@ namespace PauseSystem.Models.Mapping
             this.HasRequired(x => x.Adresser).WithMany().HasForeignKey(x => x.AdresseId);
             this.HasRequired(x => x.Kunde).WithMany().HasForeignKey(x => x.KundeId);
             this.HasRequired(x => x.Ture).WithMany().HasForeignKey(x => x.TurId);
-
-
-           // this.HasOptional(x => x.LeveringsProdukts).WithMany().HasForeignKey(x => x.Id);
-            //this.HasMany(x => x.Produkts).WithMany().Map(x => x.MapLeftKey("ProduktId").MapRightKey("LeveringsId").ToTable("LeveringsProdukt"));
-
-
+            HasMany(kl => kl.LeveringProdukts).WithRequired(p => p.TurLevering).HasForeignKey(lp => lp.LeveringsId);//.WillCascadeOnDelete(true);
 
 
 

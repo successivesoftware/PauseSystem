@@ -18,8 +18,9 @@ namespace PauseSystem.Models.Entity
         public virtual Adresser Adresser { get; set; }
         public virtual Kunde Kunde { get; set; }
         public virtual Ture Ture { get; set; }
-        public virtual Abonnementer Abonnementer { get; set; }
+       // public virtual Abonnementer Abonnementer { get; set; }
 
+        public virtual ICollection<LeveringsProdukt> LeveringProdukts { get; set; }
 
 
     }

@@ -5,9 +5,9 @@ namespace PauseSystem.Models.Entity
 {
     public partial class Ture : BaseEntity
     {
-        public Nullable<int> Year { get; set; }
-        public Nullable<int> Week { get; set; }
-        public Nullable<int> DayOfWeek { get; set; }
+        public int Year { get; set; }
+        public int Week { get; set; }
+        public DayOfWeek DayOfWeek { get; set; }
         public int TurId { get; set; }
         public Nullable<bool> Edit { get; set; }
         public byte[] Leveringer { get; set; }
@@ -24,7 +24,7 @@ namespace PauseSystem.Models.Entity
         public Nullable<int> Car { get; set; }
         public Nullable<double> Km { get; set; }
         public Nullable<bool> Packed { get; set; }
-        public Nullable<System.DateTime> Dato { get; set; }
+        public System.DateTime Dato { get; set; }
         public Nullable<System.DateTime> StartTime { get; set; }
         public Nullable<System.DateTime> EndTime { get; set; }
         public Nullable<int> AntalLeveringer { get; set; }

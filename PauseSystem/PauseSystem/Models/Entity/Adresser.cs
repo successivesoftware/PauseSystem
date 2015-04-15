@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PauseSystem.Models.Entity
 {
-    public partial class Adresser : BaseEntity
+    public partial class Adresser 
     {
         public int AdresseId { get; set; }
         public Nullable<int> KundeNr { get; set; }

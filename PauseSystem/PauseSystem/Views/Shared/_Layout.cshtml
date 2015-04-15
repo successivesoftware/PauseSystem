@@ -20,12 +20,8 @@
                     <span class="icon-bar"></span>
                 </button>
                 <a href="~/" class="navbar-brand" style="padding:0px;"> <img src="~/Images/firmafrugt.gif" height="50" /></a>
-                @*@Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })*@
             </div>
             <div class="navbar-collapse collapse">
-                @*<ul class="nav navbar-nav">
-                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    </ul>*@
                 @Html.Partial("_LoginPartial")
             </div>
         </div>
@@ -37,7 +33,9 @@
             <p>&copy; @DateTime.Now.Year - Monsterservice.dk Store. All Rights Reserved. Alle priser er ekskl. moms. Kun salg til erhverv.</p>
         </footer>
     </div>
+    @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/custom")
     @RenderSection("scripts", required: false)
 </body>
 </html>

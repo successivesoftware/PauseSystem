@@ -1,4 +1,4 @@
-﻿@model IEnumerable<PauseSystem.Models.CustomerDelivery>
+﻿@model IEnumerable<PauseSystem.Models.CustomerDeliveryAdresses>
 
     <div class="col-md-0">
         Adresse: @ViewBag.Adresse
@@ -6,41 +6,61 @@
     
     <div class="table-primary">
         <table class="table table-bordered table-hover table-striped table-condensed">
-            <thead>
-                <tr>
-                    <th><a href="http://localhost:1344/Home/SortTable?name=Antal">Antal</a></th>
-                    <th><a href="http://localhost:1344/Home/SortTable?name=VareNr">Varenr</a></th>
-                    <th><a href="http://localhost:1344/Home/SortTable?name=Beskrivelse">Beskrivelse</a></th>
-                    <th><a href="http://localhost:1344/Home/SortTable?name=Pris">Pris</a></th>
-                    <th><a href="http://localhost:1344/Home/SortTable?name=SampletPris">Samplet pris</a></th>
-                </tr>
-            </thead>
+
             <tbody>
-                @foreach (var item in Model)
+                @foreach (var cda in Model)
                 {
                     <tr>
-                        <td>
+                        <td colspan="5">Address: @cda.Adress , @cda.PostalCode , @cda.City  </td>
+                    </tr>
+                    foreach (var cd in cda.DeliveryWeeks)
+                    {
+                    <tr>
+                        <td colspan="5">Uge: @cd.Week </td>
+                    </tr>
+                        foreach (var dd in cd.DeliverDates)
+                        { 
+                            <tr>
+                                <td colspan="5"> @dd.DayOfWeek @dd.DateString</td>
+                            </tr>
+                            <tr>
+                                <th>Antal</th>
+                                <th>Varenr</th>
+                                <th>Beskrivelse</th>
+                                <th>Pris</th>
+                                <th>Samplet pris</th>
+                            </tr>
+                            foreach (var d in dd.Deliveries)
+                            {
+                                <tr>
+                                    <td>@d.Number</td>
+                                    <td>@d.ProduktNumber</td>
+                                    <td>@d.Produkt</td>
+                                    <td>@d.Pris</td>
+                                    <td>@d.Pris</td>
+                                </tr>
+                            }
+                        }
+
+
+                    }
+
+                        @*<td>
                             @item.Antal
-                            @*@item.Antal*@
                         </td>
                         <td>
                             @item.VareNr
-                            @*@item.Antal*@
                         </td>
                         <td>
                             @item.Beskrivelse
-                            @*@item.Antal*@
                         </td>
                         <td>
                             @item.Pris
-                            @*@item.Pris*@
                         </td>
                         <td>
                             @item.SampletPris
-                            @*@item.Pris*@
-                        </td>
+                        </td>*@
 
-                    </tr>
                 }
             </tbody>
         </table>

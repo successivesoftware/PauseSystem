@@ -5,13 +5,13 @@ namespace PauseSystem.Models.Entity
 {
     public partial class AbonnementProdukt : BaseEntity
     {
-        
-        public Nullable<int> AbonnementId { get; set; }
-        public Nullable<int> ProduktNr { get; set; }
-        public Nullable<System.DateTime> StartDato { get; set; }
-        public Nullable<System.DateTime> SlutDato { get; set; }
-        public Nullable<int> Antal { get; set; }
-        public Nullable<int> Interval { get; set; }
+
+        public int AbonnementId { get; set; }
+        public int ProduktNr { get; set; }
+        public System.DateTime StartDato { get; set; }
+        public System.DateTime SlutDato { get; set; }
+        public int Antal { get; set; }
+        public Interval Interval { get; set; }
         public Nullable<int> Ophør { get; set; }
         public string PrintLabel { get; set; }
         public Nullable<System.DateTime> CreatedDate { get; set; }
@@ -19,7 +19,7 @@ namespace PauseSystem.Models.Entity
         public virtual ICollection<AbbonnementProduktPause> AbbonnementProduktPauses { get; set; }
         public virtual ICollection<AbonnementProduktChange> AbonnementProduktChanges { get; set; }
 
-
+        public virtual Produkt Produkt { get; set; }
 
 
         #region Databinding
@@ -45,7 +45,7 @@ namespace PauseSystem.Models.Entity
         //}
         public bool IsActive(DateTime Date)
         {
-            if (this.StartDato.Value.Date <= Date.Date && this.SlutDato.Value.Date >= Date.Date)
+            if (this.StartDato.Date <= Date.Date && this.SlutDato.Date >= Date.Date)
                 return true;
             return false;
         }

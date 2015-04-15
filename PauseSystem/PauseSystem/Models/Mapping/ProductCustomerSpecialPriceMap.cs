@@ -8,13 +8,13 @@ namespace PauseSystem.Models.Mapping
         public ProductCustomerSpecialPriceMap()
         {
             // Primary Key
-            this.HasKey(t => new { t.Id, t.ProductId, t.CustomerId, t.Antal, t.Pris, t.FromDate, t.ToDate, t.CreatedDate, t.MedarbejderId });
+            this.HasKey(t => new { t.Id, ProductNr = t.ProductNr, t.CustomerId, t.Antal, t.Pris, t.FromDate, t.ToDate, t.CreatedDate, t.MedarbejderId });
 
             // Properties
             this.Property(t => t.Id)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
-            this.Property(t => t.ProductId)
+            this.Property(t => t.ProductNr)
                 .HasDatabaseGeneratedOption(DatabaseGeneratedOption.None);
 
             this.Property(t => t.CustomerId)
@@ -29,7 +29,7 @@ namespace PauseSystem.Models.Mapping
             // Table & Column Mappings
             this.ToTable("ProductCustomerSpecialPrices", "u1000756_FrugtTest");
             this.Property(t => t.Id).HasColumnName("Id");
-            this.Property(t => t.ProductId).HasColumnName("ProductId");
+            this.Property(t => t.ProductNr).HasColumnName("ProductId");
             this.Property(t => t.CustomerId).HasColumnName("CustomerId");
             this.Property(t => t.Antal).HasColumnName("Antal");
             this.Property(t => t.Pris).HasColumnName("Pris");

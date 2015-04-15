@@ -6,7 +6,7 @@ namespace PauseSystem.Models.Entity
     public partial class ProductCustomerSpecialPrice : BaseEntity
     {
         
-        public int ProductId { get; set; }
+        public int ProductNr { get; set; }
         public int CustomerId { get; set; }
         public int Antal { get; set; }
         public double Pris { get; set; }
