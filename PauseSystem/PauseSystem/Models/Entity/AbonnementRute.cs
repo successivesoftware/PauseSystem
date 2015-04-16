@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace PauseSystem.Models.Entity
 {
-    public partial class AbonnementRute : BaseEntity
+    public partial class AbonnementRute 
     {
         public int RuteId { get; set; }
      //   public Nullable<int> DayOfWeek { get; set; }

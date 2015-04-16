@@ -16,24 +16,39 @@ namespace PauseSystem.Controllers
 
 
         [AllowAnonymous]
+        public ActionResult Index()
+        {
+            if (PauseSecurity.IsAuthenticated)
+            {
+                return View("Livering",GetDeliveries( DateTime.Now.AddMonths(-1), DateTime.Now));
+            }
+            return View();
+        }
+
+        [HttpPost]
         public ActionResult Index(DateTime? startDate, DateTime? endDate)
         {
             if (!startDate.HasValue)
-                startDate = DateTime.Today.AddMonths(-1);
-            if (!endDate.HasValue)
-                endDate = DateTime.Today.AddMonths(1);
-
-            ViewBag.StartDate = startDate.ToDateString();
-            ViewBag.EndDate = endDate.ToDateString();
+                ModelState.AddModelError("StartDate", "StartDate field is required.");
+            else if (!endDate.HasValue)
+                ModelState.AddModelError("EndDate", "StartDate field is required.");
+            else if (CustomDateTime.IsPastDate(endDate.Value))
+                ModelState.AddModelError("EndDate", "EndDate should not be past date.");
+            else if (endDate.Value < startDate.Value)
+                ModelState.AddModelError("EndDate", "EndDate should not be be less StartDate.");
+            if (!ModelState.IsValid)
+            {
+                return View(new List<CustomerDeliveryAdresses>());
+            }
             return View(GetDeliveries(startDate.Value, endDate.Value));
         }
 
 
-
         private IList<CustomerDeliveryAdresses> GetDeliveries(DateTime startDate, DateTime endDate)
         {
-            int? kundeId = PauseSecurity.IsInRole(RoleTypes.Customer) ? PauseSecurity.GetUserId() : (Nullable<int>)null;
-            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, kundeId);
+            ViewBag.StartDate = startDate.ToDateString();
+            ViewBag.EndDate = endDate.ToDateString();
+            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, PauseSecurity.GetUserId());
         }
 
 

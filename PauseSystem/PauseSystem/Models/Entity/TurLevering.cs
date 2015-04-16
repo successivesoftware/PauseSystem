@@ -5,6 +5,10 @@ namespace PauseSystem.Models.Entity
 {
     public partial class TurLevering : BaseEntity
     {
+        public TurLevering()
+        {
+            LeveringProdukts = new List<LeveringsProdukt>();
+        }
         
         public int KundeId { get; set; }
         public int TurId { get; set; }

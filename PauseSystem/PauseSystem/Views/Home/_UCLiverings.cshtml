@@ -1,67 +1,57 @@
 ﻿@model IEnumerable<PauseSystem.Models.CustomerDeliveryAdresses>
 
-    <div class="col-md-0">
-        Adresse: @ViewBag.Adresse
-    </div>
-    
-    <div class="table-primary">
-        <table class="table table-bordered table-hover table-striped table-condensed">
 
-            <tbody>
-                @foreach (var cda in Model)
+@if (!Model.Any())
+{
+    <p class="norecord"> @PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
+    return;
+}
+
+<div class="col-md-0">
+    Adresse: @ViewBag.Adresse
+</div>
+
+<div class="table-primary">
+    <table class="table table-bordered table-hover table-striped table-condensed">
+
+        <tbody>
+            @foreach (var cda in Model)
+            {
+                <tr class="success">
+                    <td colspan="5">Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+                </tr>
+                foreach (var cd in cda.DeliveryWeeks)
                 {
-                    <tr>
-                        <td colspan="5">Address: @cda.Adress , @cda.PostalCode , @cda.City  </td>
-                    </tr>
-                    foreach (var cd in cda.DeliveryWeeks)
-                    {
                     <tr>
                         <td colspan="5">Uge: @cd.Week </td>
                     </tr>
-                        foreach (var dd in cd.DeliverDates)
-                        { 
+                    foreach (var dd in cd.DeliverDates)
+                    {
+                        <tr>
+                            <td colspan="5" style="color:red;"> @dd.DayOfWeek, @dd.DateString </td>
+                        </tr>
+                        <tr class="warning">
+                            <td>Antal</td>
+                            <td>Varenr</td>
+                            <td>Beskrivelse</td>
+                            <td>Pris</td>
+                            <td>Samplet pris</td>
+                        </tr>
+                        foreach (var d in dd.Deliveries)
+                        {
                             <tr>
-                                <td colspan="5"> @dd.DayOfWeek @dd.DateString</td>
+                                <td>@d.Number</td>
+                                <td>@d.ProduktNumber</td>
+                                <td>@d.Produkt</td>
+                                <td>@d.Pris</td>
+                                <td>@d.Pris</td>
                             </tr>
-                            <tr>
-                                <th>Antal</th>
-                                <th>Varenr</th>
-                                <th>Beskrivelse</th>
-                                <th>Pris</th>
-                                <th>Samplet pris</th>
-                            </tr>
-                            foreach (var d in dd.Deliveries)
-                            {
-                                <tr>
-                                    <td>@d.Number</td>
-                                    <td>@d.ProduktNumber</td>
-                                    <td>@d.Produkt</td>
-                                    <td>@d.Pris</td>
-                                    <td>@d.Pris</td>
-                                </tr>
-                            }
                         }
-
-
                     }
 
-                        @*<td>
-                            @item.Antal
-                        </td>
-                        <td>
-                            @item.VareNr
-                        </td>
-                        <td>
-                            @item.Beskrivelse
-                        </td>
-                        <td>
-                            @item.Pris
-                        </td>
-                        <td>
-                            @item.SampletPris
-                        </td>*@
 
                 }
-            </tbody>
-        </table>
-    </div>
+            }
+        </tbody>
+    </table>
+</div>

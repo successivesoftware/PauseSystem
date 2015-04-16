@@ -14,7 +14,7 @@
         <h4>Leveringsadresser</h4>
 
         <div class="form-horizontal">
-            @using (Html.BeginForm(null, null, FormMethod.Get))
+            @using (Html.BeginForm(null, null, FormMethod.Post))
             {
                 <div class="col-md-3">
                     <div class="form-group">
@@ -24,6 +24,7 @@
                                 @Html.TextBox("StartDate", (string)ViewBag.StartDate, new { @class = "form-control", title = "Startdato", required = true})
                                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
+                            @Html.ValidationMessage("StartDate")
                         </div>
                     </div>
 
@@ -37,6 +38,7 @@
                                 @Html.TextBox("EndDate", (string)ViewBag.EndDate, htmlAttributes: new { @class = "form-control required", title = "Slutdato" })
                                 <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
                             </div>
+                            @Html.ValidationMessage("EndDate")
                         </div>
                     </div>
 
@@ -51,11 +53,12 @@
         <div class="clearfix"></div>
         @{Html.RenderPartial("_UCLiverings");}
 
-        @*//Html.RenderAction("GetLeverings", new {StartDate = Convert.ToDateTime(DateTime.Today.ToString("d")), EndDate = Convert.ToDateTime(DateTime.Today.AddMonths(1).ToString("d")) });*@
-
-
     </div>
-
+    <script type="text/javascript">
+        function ready() {
+            global.initdatepicker('.date');
+        }
+    </script>
 }
 else
 {
@@ -70,9 +73,3 @@ else
     </div>
 }
 
-<script type="text/javascript">
-    $(document).ready(function () {
-        global.initdatepicker('.date');
-    })
-
-</script>

@@ -34,22 +34,25 @@ namespace PauseSystem
 
         #endregion
 
-        public static DateTime GetNextMonday(this DateTime date)
+       /// <summary>
+       /// returns true if given datetime is past from currentdatetime else false.
+       /// </summary>
+       /// <param name="datetime"></param>
+       /// <returns></returns>
+        public static bool IsPastDateTime(DateTime datetime)
         {
-            //var returnDate = new DateTime(date.Year, date.Month, date.Day);
-            while (date.DayOfWeek != DayOfWeek.Monday)
-                date = date.AddDays(1);
-            return date;
-
+            return datetime < DateTime.Now;
         }
 
-        //private static int GetWeekNumber(this DateTime date)
-        //{
-
-        //    int weekNum = 0, year;
-        //   // TimeTool.GetWeekOfYear(date, YearWeekType.Iso8601, out year, out weekNum);
-        //    return weekNum;
-        //}
+        /// <summary>
+        /// returns true if given date is past from currentdate else false.
+        /// </summary>
+        /// <param name="datetime"></param>
+        /// <returns></returns>
+        public static bool IsPastDate(DateTime datetime)
+        {
+            return datetime.Date < DateTime.Today;
+        }
 
         #region Extensions
 
@@ -57,11 +60,12 @@ namespace PauseSystem
         /// convert datetime to date only string. if datetime is null then returns empty string.
         /// </summary>
         /// <returns>string format</returns>
-        public static string ToDateString(this DateTime? dateTime)
+        public static string ToDateString(this DateTime dateTime)
         {
-            return dateTime.HasValue ? ParseToStringFormat(dateTime.Value, CustomDateTimeFormats.DefaultDate) : String.Empty;
+            return ParseToStringFormat(dateTime, CustomDateTimeFormats.DefaultDate);
         }
 
+       
         /// <summary>
         /// convert datetime to given string format. if datetime is null then returns empty string.
         /// </summary>
@@ -71,6 +75,19 @@ namespace PauseSystem
             return dateTime.HasValue ? ParseToStringFormat(dateTime.Value, format) : String.Empty;
         }
 
+        /// <summary>
+        /// returns Date of upcoming monday.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static DateTime GetNextMonday(this DateTime date)
+        {
+            while (date.DayOfWeek != DayOfWeek.Monday)
+                date = date.AddDays(1);
+            return date;
+        }
+
+
         #endregion
 
     }
@@ -78,9 +95,6 @@ namespace PauseSystem
     public enum CustomDateTimeFormats
     {
         DefaultDate, DefaultDateTime, DefaultDateTime12, DefaultDateTime24, Time12, Time24
-
-        //public const string DefaultDate = "MM/dd/yyyy";
-        //public const string DefaultDateTime = "MM/dd/yyyy hh:mm tt";
     }
 
 }

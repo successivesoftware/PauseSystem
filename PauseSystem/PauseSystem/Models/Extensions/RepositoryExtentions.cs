@@ -32,43 +32,38 @@ namespace PauseSystem.Models.Entity
         //}
 
         public static IList<CustomerDeliveryAdresses> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork, 
-            DateTime Start, DateTime End, int? kundeId)
+            DateTime startDate, DateTime endDate, int kundeId)
         {
             var finalProdukter = new List<LeveringsProdukt>();
             var deliveries = new List<CustomerDeliveryAdresses>();
+            startDate = startDate.Date;
+            endDate = endDate.Date;
 
-            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable()
-                                .Where(l => (l.Ture.Dato >= Start.Date && l.Ture.Dato <= End.Date));
-            //.Take(20); && l.KundeId == kundeId
-            var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
-            var leveringDateMax = leveringMonday.Date > Start.Date ? leveringMonday.Date : Start.Date;
-            
+            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date
+                && l.KundeId == kundeId);
+
+           var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
+            var leveringDateMax = leveringMonday > startDate ? leveringMonday : startDate;
             if (qleveringer.Any())
             {
-                //if (qleveringer.Any(l => l.Ture.Dato.Date > leveringDateMax))
-                //    leveringDateMax = qleveringer.Max(l => l.Ture.Dato.Date);
+                if (qleveringer.Any(l => l.Ture.Dato > leveringDateMax))
+                    leveringDateMax = qleveringer.Max(l => l.Ture.Dato);
                 finalProdukter.AddRange(qleveringer.SelectMany(l => l.LeveringProdukts));
             }
-            //if (qleveringer.Any(l => l.Ture.Dato.Date > leveringDateMax.Date))
-            //    leveringDateMax = qleveringer.Max(l => l.Ture.Dato.Date);
+            if (qleveringer.Any(l => l.Ture.Dato > leveringDateMax))
+                leveringDateMax = qleveringer.Max(l => l.Ture.Dato);
 
-            //var week = TimeTool.GetWeekNumber(DateTime.Now);
-            //int abbWeek = TimeTool.GetWeekNumber(leveringDateMax);
-
-            var maxDate = TimeTool.GetDate(DateTime.Now.Year, TimeTool.GetWeekNumber(leveringDateMax), (int)DayOfWeek.Monday);
-            maxDate = maxDate.Date > Start.Date ? maxDate.Date : Start.Date;
-            if (leveringDateMax.Date > maxDate.Date)
+            var maxDate = TimeTool.GetDate(DateTime.Now.Year, TimeTool.GetWeekNumber(leveringDateMax), (int)DayOfWeek.Monday).Date;
+            maxDate = maxDate > startDate ? maxDate : startDate;
+            if (leveringDateMax > maxDate.Date)
                 maxDate = leveringDateMax.Date;
 
-            if (maxDate.Date < End.Date)
+            if (maxDate.Date < endDate.Date)
             {
                 var abonnementer = unitOfWork.Repository<Abonnementer>().AsQuerable().Where(t => t.Kunde.Id == kundeId);
-                //var ways = TimeTool.GetWeekAndYears(maxDate, End);
-
-                foreach (var tmpway in TimeTool.GetWeekAndYears(maxDate, End))
+                foreach (var tmpway in TimeTool.GetWeekAndYears(maxDate, endDate))
                 {
-                    var ableveringer = abonnementer.GetLeveringerForService(tmpway.Year, tmpway.Week, 
-                                    unitOfWork.Repository<ProductCustomerSpecialPrice>().AsQuerable());
+                    var ableveringer = abonnementer.GetLeveringerForService(tmpway.Year, tmpway.Week, unitOfWork.Repository<ProductCustomerSpecialPrice>().AsQuerable());
                     ableveringer.All(abl =>
                     {
                         abl.Ture = new Ture()
@@ -86,9 +81,8 @@ namespace PauseSystem.Models.Entity
                 }
             }
 
-            var produkter = finalProdukter.OrderBy(p => p.TurLevering.Ture.Dato).
-                ThenBy(p => p.Produkt.Navn).ToList();
-            foreach (var levering in produkter.Where(p => p.TurLevering.Ture.Dato.Date >= Start.Date && p.TurLevering.Ture.Dato <= End.Date))
+            var produkter = finalProdukter.OrderBy(p => p.TurLevering.Ture.Dato).ThenBy(p => p.Produkt.Navn).ToList();
+            foreach (var levering in produkter.Where(p => p.TurLevering.Ture.Dato.Date >= startDate.Date && p.TurLevering.Ture.Dato <= endDate.Date))
             {
                 if (deliveries.Any(m => m.AdressId == levering.TurLevering.AdresseId))
                 {
@@ -119,7 +113,7 @@ namespace PauseSystem.Models.Entity
                                 .DeliverDates.Add(new CustomerDeliverDates()
                                 {
                                     DayOfWeek = System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToUpper(),
+                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
                                     Date = levering.TurLevering.Ture.Dato,
                                     DateString =
                                         levering.TurLevering.Ture.Dato.ToShortDateString(),
@@ -152,7 +146,7 @@ namespace PauseSystem.Models.Entity
                             {
                                 DayOfWeek =
                                     System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                        .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToUpper(),
+                                        .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
 
                                 Date = levering.TurLevering.Ture.Dato,
                                 DateString =
@@ -194,8 +188,7 @@ namespace PauseSystem.Models.Entity
                         {
                             DayOfWeek =
                                 System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek)
-                                    .ToUpper(),
+                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
                             Date = levering.TurLevering.Ture.Dato,
                             DateString =
                                 levering.TurLevering.Ture.Dato.ToShortDateString(),
@@ -215,7 +208,7 @@ namespace PauseSystem.Models.Entity
                         });
                 }
             }
-            return deliveries;
+            return deliveries.Distinct().ToList();
 
         }
 
@@ -307,9 +300,9 @@ namespace PauseSystem.Models.Entity
                                     Provision = abonnementProdukt.Produkt.Provision,
                                     SalgsPris = abonnementProdukt.Produkt.SalgsPris
                                 };
-                                if (priser.Any(pc => pc.CustomerId == levering.KundeId && pc.ProductNr == abonnementProdukt.ProduktNr
-                                    && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato))
-                                {
+                                //if (priser.Any(pc => pc.CustomerId == levering.KundeId && pc.ProductNr == abonnementProdukt.ProduktNr
+                                //    && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato))
+                                //{
                                     foreach (var pcsp in priser.Where(pc => pc.CustomerId == levering.KundeId && pc.ProductNr ==
                                         abonnementProdukt.ProduktNr && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato)
                                         .OrderByDescending(p => p.Antal))
@@ -320,26 +313,23 @@ namespace PauseSystem.Models.Entity
                                             break;
                                         }
                                     }
-                                }
+                               // }
                                 if (levering.LeveringProdukts.All(p => p.Produkt.ProduktNr != lp.Produkt.ProduktNr))
                                     levering.LeveringProdukts.Add(lp);
                                 else
-                                    levering.LeveringProdukts.First(p => p.Produkt.ProduktNr == lp.Produkt.ProduktNr).Antal +=
-                                        lp.Antal;
+                                    levering.LeveringProdukts.First(p => p.Produkt.ProduktNr == lp.Produkt.ProduktNr).Antal += lp.Antal;
                             }
                         }
                     }
-                    if (levering.LeveringProdukts.Count > 0)
+                    if (levering.LeveringProdukts.Any())
+                    {
                         if (levering.Adresser != null && levering.Adresser.X.HasValue && levering.Adresser.Y.HasValue)
                             kundeLeveringer.Add(levering);
-
-
-
-
+                    }
                 }
 
             }
-            return kundeLeveringer;
+            return kundeLeveringer.Distinct().ToList();
         }
 
         public static bool IsInIntervalWeek(this AbonnementProdukt abonnementProdukt, DateTime leveringsDato, int week)
