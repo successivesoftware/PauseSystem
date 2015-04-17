@@ -152,7 +152,10 @@ namespace PauseSystem.Controllers
         //    return PartialView("_UCLiverings", items);
         //}
 
-
+        public ActionResult AjaxDelete(string id)
+        {
+            return Content(id);
+        }
 
 
 
