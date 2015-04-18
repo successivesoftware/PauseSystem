@@ -196,3 +196,8 @@ FakesAssemblies/
 *.opt
 PauseSystem/PauseSystem.v12.suo
 *.cache
+PauseSystem/PauseSystem/bin/PauseSystem.dll.config
+PauseSystem/PauseSystem/bin/PauseSystem.dll
+PauseSystem/PauseSystem/bin/PauseSystem.dll.config
+*.cache
+PauseSystem/PauseSystem/obj/Debug/PauseSystem.pdb
