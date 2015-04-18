@@ -11,6 +11,14 @@
 
 </head>
 <body>
+
+    <div id="bgLoader" style="display:none">
+        <div class="fade"></div>
+        <div class="loader">
+            <img src="~/Content/Images/loading.gif" />
+        </div>
+    </div>
+
     <div class="navbar navbar-static-top" role="banner">
         <div class="container">
             <div class="navbar-header">
@@ -35,8 +43,9 @@
     </div>
     @Scripts.Render("~/bundles/jqueryval")
     @Scripts.Render("~/bundles/bootstrap")
-        @Scripts.Render("~/bundles/custom")
+    @Scripts.Render("~/bundles/custom")
     <script src="~/Scripts/jquery.unobtrusive-ajax.min.js"></script>
     @RenderSection("scripts", required: false)
+
 </body>
 </html>

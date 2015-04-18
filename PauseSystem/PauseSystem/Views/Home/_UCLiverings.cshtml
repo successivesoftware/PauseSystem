@@ -1,66 +1,82 @@
 ﻿@model IEnumerable<PauseSystem.Models.CustomerDeliveryAdresses>
 
-    @if (!Model.Any())
-    {
-        <p class="norecord"> @PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
-        return;
-    }
-    @*@{
-        AjaxOptions option = new AjaxOptions(){
-        option.HttpMethod = "POST";
-        option.InsertionMode = System.Web.Mvc.Ajax.InsertionMode.Replace;
-        option.UpdateTargetId = "tempDiv";
-        option.OnSuccess = "test(this)";
-        }
-    }*@
+@if (!Model.Any())
+{
+    <p class="norecord"> @PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
+    return;
+}
+<div class="col-md-0"> Adresse: @ViewBag.Adresse </div>
 
-    <div class="col-md-0">
-        Adresse: @ViewBag.Adresse
-    </div>
-    <div id="tempDiv"></div>
-    <div class="table-primary">
-        
-        <table class="table table-bordered table-striped table-condensed" id="productTableId">
-            @foreach (var cda in Model)
+<div class="table-responsive">
+
+    <table class="table table-bordered table-striped table-condensed" id="productTableId">
+        @foreach (var cda in Model)
+        {
+            <tr class="success">
+                <td>Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+            </tr>
+            foreach (var cd in cda.DeliveryWeeks)
             {
-                <tr class="success">
-                    <td colspan="6">Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+                <tr>
+                    <td>Uge: @cd.Week </td>
                 </tr>
-                foreach (var cd in cda.DeliveryWeeks)
-                {
-                    <tr>
-                        <td colspan="6">Uge: @cd.Week </td>
-                    </tr>
 
-                    foreach (var dd in cd.DeliverDates)
-                    {
-                        <tr id="@cd.Week@dd.DayOfWeek" data-group-id="@string.Format("{0}{1}", cd.Week, dd.DayOfWeek)">
-                            <td colspan="5" style="color:red;"> @dd.DayOfWeek, @dd.DateString </td>
-                            <td>@Ajax.ActionLink("Delete", "AjaxDelete", new { id = cd.Week }, new AjaxOptions { Confirm = "Do you wish to delete this record?", OnSuccess = string.Format("AjaxDeleteDayOfWeek('{0}{1}')", cd.Week, dd.DayOfWeek) })</td>
-                        </tr>
-                        <tr class="warning" data-group-id="@string.Format("{0}{1}", cd.Week, dd.DayOfWeek)">
-                            <td>Antal</td>
-                            <td>Varenr</td>
-                            <td>Beskrivelse</td>
-                            <td>Pris</td>
-                            <td>Samplet pris</td>
-                            <td>Action</td>
-                        </tr>
-                        foreach (var d in dd.Deliveries)
-                        {
-                            <tr id="@d.ProduktNumber@cd.Week@dd.DayOfWeek" data-group-id="@string.Format("{0}{1}", cd.Week, dd.DayOfWeek)">
-                                <td>@d.Number</td>
-                                <td>@d.ProduktNumber</td>
-                                <td>@d.Produkt</td>
-                                <td>@d.Pris</td>
-                                <td>@d.Pris</td>
-                                <td>@Ajax.ActionLink("Delete", "AjaxDelete", new { id = d.ProduktNumber }, new AjaxOptions { Confirm = "Do you wish to delete this record?", OnSuccess = string.Format("AjaxDeleteProduct('{0}{1}{2}')", d.ProduktNumber, cd.Week, dd.DayOfWeek) })</td>
-                            </tr>
-                        }
-                    }
+                foreach (var dd in cd.DeliverDates)
+                {
+                    <tr id="@dd.Date.ToString("ddMMyyyy")">
+                        <td>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td style="color:red;" colspan="6">
+                                        @dd.DayOfWeek, @dd.DateString
+                                        @Ajax.ActionLink("Delete", "AjaxDeleteDeliveryWeek", new {  date = dd.Date.ToString() },
+                                        new AjaxOptions
+                                        {
+                                            HttpMethod = "Post",
+                                            Confirm = "Do you want to delete all deleveries for this date?",
+                                            LoadingElementId = "bgLoader",
+                                            OnSuccess = "jsLiverenger.deleteDeliveryWeek(" + dd.Date.ToString("ddMMyyyy") + ")"
+                                        }, htmlAttributes: new { @class = "pull-right" })
+                                    </td>
+                                </tr>
+
+                                <tr class="warning">
+                                    <td>Antal</td>
+                                    <td>Varenr</td>
+                                    <td>Beskrivelse</td>
+                                    <td>Pris</td>
+                                    <td>Samplet pris</td>
+                                    <td>Action</td>
+                                </tr>
+
+                                @foreach (var d in dd.Deliveries)
+                                {
+                                    <tr id="@d.Id">
+                                        <td>@d.Number</td>
+                                        <td>@d.ProduktNumber</td>
+                                        <td>@d.Produkt</td>
+                                        <td>@d.Pris</td>
+                                        <td>@d.Pris</td>
+                                        <td>
+                                            @Ajax.ActionLink("Delete", "AjaxDeleteDelivery", new { id = d.Id },
+                                            new AjaxOptions
+                                            {
+                                                HttpMethod = "Post",
+                                                Confirm = "Do you want to delete this delivery?",
+                                                LoadingElementId = "bgLoader",
+                                                OnSuccess = "jsLiverenger.deleteDelivery(" + d.Id + ")"
+                                            })
+                                        </td>
+                                    </tr>
+                                }
+
+                            </table>
+                        </td>
+                    </tr>
                 }
             }
-        </table>
+        }
+    </table>
 
 
-    </div>
+</div>

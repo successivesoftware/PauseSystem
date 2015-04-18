@@ -12,13 +12,18 @@ namespace PauseSystem
 
         private static string GetFormat(CustomDateTimeFormats format)
         {
-            return format == CustomDateTimeFormats.DefaultDate ? "MM/dd/yyyy"
-                : format == CustomDateTimeFormats.DefaultDateTime ? "MM/dd/yyyy hh:mm tt"
-                : format == CustomDateTimeFormats.DefaultDateTime12 ? "MM/dd/yyyy hh:mm tt"
-                : format == CustomDateTimeFormats.DefaultDateTime24 ? "MM/dd/yyyy hh:mm"
+            return format == CustomDateTimeFormats.DefaultDate ? "MM'/'dd'/'yyyy"
+                : format == CustomDateTimeFormats.DefaultDateTime ? "MM'/'dd'/'yyyy hh:mm tt"
+                : format == CustomDateTimeFormats.DefaultDateTime12 ? "MM'/'dd'/'yyyy hh:mm tt"
+                : format == CustomDateTimeFormats.DefaultDateTime24 ? "MM'/'dd'/'yyyy hh:mm"
                 : format == CustomDateTimeFormats.Time12 ? "hh:mm tt"
                 : format == CustomDateTimeFormats.Time24 ? "hh:mm"
-                : "yyyy-dd-MM hh:mm:ss";
+                : "yyyy'/'MM'/'dd hh:mm:ss";
+        }
+
+        private static System.Globalization.CultureInfo GetCulture()
+        {
+            return System.Threading.Thread.CurrentThread.CurrentCulture;  //System.Configuration.ConfigurationManager.AppSettings[];
         }
 
         private static string ParseToStringFormat(DateTime dateTime, string format)
@@ -34,7 +39,7 @@ namespace PauseSystem
 
         #endregion
 
-       /// <summary>
+        /// <summary>
        /// returns true if given datetime is past from currentdatetime else false.
        /// </summary>
        /// <param name="datetime"></param>

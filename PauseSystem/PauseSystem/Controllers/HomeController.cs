@@ -52,109 +52,16 @@ namespace PauseSystem.Controllers
         }
 
 
-        //[AcceptVerbs(HttpVerbs.Post)]
-        //public PartialViewResult getLeverings(DateTime StartDate, DateTime EndDate)
-        //{
-        //    int kundeId = PauseSecurity.GetUserId();
-        //    DateTime startDate = StartDate;
-        //    DateTime endDate = EndDate;
-        //    IList<CustomerDelivery> items;
-        //    if (User.IsInRole(UserRoleTypes.Employee))
-        //    {
-        //        items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate);
-        //    }
-        //    else
-        //    {
-        //        items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForCustomer(unitOfWork, kundeId, startDate, endDate);
-        //    }
-        //    var adresse = unitOfWork.Repository<Adresser>().AsQuerable().Where(x => x.KundeId == kundeId)
-        //                                    .Select(x => new { address = x.Adresse + ", " + x.PostNr + ", " + x.City });
-
-        //    foreach (var address in adresse)
-        //    {
-        //        ViewBag.Adresse = address.address;
-        //    }
-
-        //    return PartialView("_UCLiverings2", items);
-        //}
-
-        //[ChildActionOnly]
-        //public PartialViewResult GetLeverings()
-        //{
-        //    int kundeId = PauseSecurity.GetUserId();
-        //    DateTime startDate = DateTime.Now;
-        //    DateTime endDate = DateTime.Now;
-        //    IList<CustomerDelivery> items;
-        //    if (User.IsInRole(UserRoleTypes.Employee))
-        //    {
-        //        items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate);
-        //    }
-        //    else
-        //    {
-        //        items = unitOfWork.Repository<LeveringsProdukt>().GetDeliveriesForCustomer(unitOfWork, kundeId, startDate, endDate);
-        //    }
-
-        //    //if (maxDate.Date < endDate.Date)
-        //    //{
-        //    //    var abonnementer = unitOfWork.Repository<Abonnementer>().AsQuerable().Where(x => x.KundeId == kundeId);
-        //    //    var ways = TimeTool.GetWeekAndYears(maxDate, endDate);
-
-        //    //    //subusiContext.ProductCustomerSpecialPrices.Load();
-
-        //    //    foreach (var tmpway in ways)
-        //    //    {
-        //    //        var ableveringer = abonnementer.GetLeveringerForService(tmpway.Year, tmpway.Week, unitOfWork.Repository<ProductCustomerSpecialPrice>().AsQuerable());
-        //    //        ableveringer.All(abl =>
-        //    //        {
-        //    //            abl.Tur = new Ture()
-        //    //            {
-        //    //                TurId = abl.Tur.TurId,
-        //    //                Week = abl.Tur.Week,
-        //    //                Year = abl.Tur.Year,
-        //    //               // UgeDag = abl.Tur.UgeDag,
-        //    //                Dato = TimeTool.GetDate(abl.Tur.Year, abl.Tur.Week, (int)abl.Tur.UgeDag)
-        //    //            };
-        //    //            return true;
-        //    //        });
-
-        //    //        finalProdukter.AddRange(ableveringer.SelectMany(l => l.Produkter));
-        //    //    }
-        //    //}
-
-
-
-
-        //    //if (startDate.HasValue)
-        //    //    query = query.Where(x => x.TurLevering.Ture.Dato.Value > startDate);
-
-
-
-
-
-        //    //var k = query.Take(20).Select(x => new CustomerDelivery
-        //    //{
-        //    //    Antal = x.Antal,
-        //    //    VareNr = x.ProduktNr,
-        //    //    Beskrivelse = x.Produkt.Navn.ToString(), //.Navn,
-        //    //    Pris = x.SalgsPris,
-        //    //    SampletPris = x.SalgsPris
-        //    //}).ToList();
-
-
-        //    var adresse = unitOfWork.Repository<Adresser>().AsQuerable().Where(x => x.KundeId == kundeId)
-        //                                    .Select(x => new { address = x.Adresse + ", " + x.PostNr + ", " + x.City });
-
-        //    foreach (var address in adresse)
-        //    {
-        //        ViewBag.Adresse = address.address;
-        //    }
-
-        //    return PartialView("_UCLiverings", items);
-        //}
-
-        public ActionResult AjaxDelete(string id)
+        [HttpPost]
+        public ActionResult AjaxDeleteDelivery(int id)
         {
-            return Content(id);
+            return Content(id.ToString());
+        }
+
+        [HttpPost]
+        public ActionResult AjaxDeleteDeliveryWeek(string date)
+        {
+            return Content(date);
         }
 
 
