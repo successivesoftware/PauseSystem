@@ -53,30 +53,34 @@ namespace PauseSystem.Controllers
 
 
         [HttpPost]
-        public ActionResult AjaxDeleteDelivery(int id)
+        public JsonResult AjaxDeleteDelivery(int id)
         {
-            return Content(id.ToString());
+            // Write the code to delete delivery here
+
+           return this.ToJsonResult(id);
         }
 
         [HttpPost]
         public ActionResult AjaxDeleteDeliveryWeek(string date)
         {
-            return Content(date);
+            // Write the code to delete delivery week here
+
+            return this.ToJsonResult(date);
         }
 
 
 
-        [Authorize(Roles = RoleTypes.Customer)]
-        public ActionResult About()
-        {
-            ViewBag.Message = "Your application description page.";
-            return View();
-        }
+        //[Authorize(Roles = RoleTypes.Customer)]
+        //public ActionResult About()
+        //{
+        //    ViewBag.Message = "Your application description page.";
+        //    return View();
+        //}
 
-        public ActionResult Contact()
-        {
-            ViewBag.Message = "Your contact page.";
-            return View();
-        }
+        //public ActionResult Contact()
+        //{
+        //    ViewBag.Message = "Your contact page.";
+        //    return View();
+        //}
     }
 }

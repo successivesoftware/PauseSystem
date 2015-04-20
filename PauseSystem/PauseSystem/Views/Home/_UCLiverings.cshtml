@@ -35,8 +35,7 @@
                                             HttpMethod = "Post",
                                             Confirm = "Do you want to delete all deleveries for this date?",
                                             LoadingElementId = "bgLoader",
-                                            OnSuccess = "jsLiverenger.deleteDeliveryWeek(" + dd.Date.ToString("ddMMyyyy") + "); responseMessage.show('The record(s) has been deleted successfully', 'alert-success')",
-                                            OnFailure = "responseMessage.show('Error while updating!!, alert-danger')"
+                                            OnComplete = "jsLiverenger.deleteDeliveryWeek('"+ (dd.Date.ToString("ddMMyyyy")) +"',xhr)"
                                         }, htmlAttributes: new { @class = "pull-right" })
                                     </td>
                                 </tr>
@@ -65,8 +64,7 @@
                                                 HttpMethod = "Post",
                                                 Confirm = "Do you want to delete this delivery?",
                                                 LoadingElementId = "bgLoader",
-                                                OnSuccess = "jsLiverenger.deleteDelivery(" + d.Id + "); responseMessage.show('The record has been deleted successfully', 'alert-success')",
-                                                OnFailure = "responseMessage.show('Error while updating!!, alert-danger')"
+                                                OnComplete = "jsLiverenger.deleteDelivery('" + (d.Id) + "',xhr)"
                                             })
                                         </td>
                                     </tr>

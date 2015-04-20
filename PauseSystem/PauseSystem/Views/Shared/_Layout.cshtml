@@ -12,11 +12,9 @@
 </head>
 <body>
 
-    <div id="responseAlertBox" class="alert alert-dismissable">
-        <button type="button" class="close" onclick="$('.alert').slideUp()">
-            &times;
-        </button>
-        <div id="responseMessage"></div>
+    <div id="responseAlertBox" class="alert alert-dismissable" style="position:fixed; z-index:9999; width:100%;">
+        <button type="button" class="close" onclick="$('.alert').slideUp()">&times;</button>
+        <div></div>
     </div>
 
     <div id="bgLoader" style="display:none">
