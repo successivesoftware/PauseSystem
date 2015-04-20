@@ -91,7 +91,9 @@ form label.required:after {
     z-index:9999;
 }
 
-
+#responseAlertBox {
+    display:none;
+}
 
 /*#dvLoader img {
         top: 40%;

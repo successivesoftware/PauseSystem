@@ -18,7 +18,6 @@
 var jsLiverenger = {
     deleteDelivery: function (id) {
         $("#" + id).remove();
-
     },
     deleteDeliveryWeek: function (id) {
         $("#" + id).remove();
@@ -26,10 +25,13 @@ var jsLiverenger = {
 }
 
 var responseMessage = {
-    show: function (text) {
-
+    show: function (text, alertClass) {
+        $('#responseMessage').text(text);   //Message div inside responseAlertBox div
+        var element = $('#responseAlertBox');
+        element.addClass(alertClass);
+        element.slideDown();
     },
     hide: function () {
-
+        $('#ResponseAlertBox').slideUp();
     }
 }
