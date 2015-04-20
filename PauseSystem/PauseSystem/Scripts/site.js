@@ -24,3 +24,12 @@ var jsLiverenger = {
         $("#" + id).remove();
     }
 }
+
+var responseMessage = {
+    show: function (text) {
+
+    },
+    hide: function () {
+
+    }
+}
