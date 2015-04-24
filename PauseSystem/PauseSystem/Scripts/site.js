@@ -25,7 +25,7 @@ var jsLiverenger = {
     },
 
     updateAntal: function (id, operation) {
-        alert(id);
+
         var cont = parseInt($("#" + id).text(), 10);
         if ((operation == 0) && (cont > 0)) {
             $("#" + id).text(cont - 1);
@@ -133,22 +133,18 @@ var jsLiverenger = {
     },
 
     addNewRow: function (id, tableId) {
-        var productId = $("#hiddenProductId_" + id).val();
-        var antal = $("#hiddenProductAntal_" + id).val();
-        var varenr = $('#hiddenProductVarenr_' + id).val();
-        var beskrivelse = $("#hiddenProductBeskrivelse_" + id).val();
-        var pris = $("#hiddenProductPris_" + id).val();
-        var sPris = $("#hiddenProductSPris_" + id).val();
-        var row = '<tr id=' + productId + '>'
-                    + '<td><div id="Antal' + productId + '" style="float:left">' + 5 + '</div>'
-                                     + '<a href=/Home/AjaxUpdateAntal?produktNumber=' + varenr + '&amp;operation=1 data-ajax-method="Post" data-ajax-loading="#bgLoader" data-ajax-complete="jsLiverenger.updateAntal(Antal' + varenr + ',1)" data-ajax="true">+</a>'
-                                     + '<a href="/Home/AjaxUpdateAntal?produktNumber=' + varenr + '&amp;operation=0" data-ajax-method="Post" data-ajax-loading="#bgLoader" data-ajax-complete="jsLiverenger.updateAntal(Antal' + varenr + ',0)" data-ajax="true">-</a>'
-                    + '</td>'
+        var id = $("#hiddenProductId_" + id).val();
+        var antal = $("#hiddenProductAntal_" + id).value;
+        var varenr = $("#hiddenProductVarenr_" + id).val();
+        var beskrivelse = $("#hiddenProductBeskrivelse_" + id).attr("value");
+        var pris = $("#hiddenProductPris_" + id).value;
+        var sPris = $("#hiddenProductSPris_" + id).value;
+        var row = '<tr>'
+                    + '<td>' + antal + '</td>'
                     + '<td>' + varenr + '</td>'
                     + '<td>' + beskrivelse + '</td>'
                     + '<td>' + pris + '</td>'
                     + '<td>' + sPris + '</td>'
-                    + '<td> <a href="/Home/AjaxDeleteDelivery/' + productId + '" data-ajax-method="Post" data-ajax-loading="#bgLoader" data-ajax-confirm="Do you want to delete this delivery?" data-ajax-complete="jsLiverenger.deleteDelivery(' + productId + ',xhr)" data-ajax="true">Delete</a> </td>'
                     + '</tr>'
 
         $("#" + tableId).append(row);

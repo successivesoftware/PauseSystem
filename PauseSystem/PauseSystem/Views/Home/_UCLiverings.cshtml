@@ -108,7 +108,7 @@
                                             <input type="hidden" id=@string.Format("hiddenProductSPris_product_{0}{1}", cd.Week, dd.DayOfWeek) />
                                         </td>
                                         <td>
-                                            @Ajax.ActionLink("Add", "AjaxAddNewProductRow",
+                                            @Ajax.ActionLink("Add", "AjaxAddNewProductRow", new { id = 1 },
                                             new AjaxOptions
                                             {
                                                 HttpMethod = "Post",
