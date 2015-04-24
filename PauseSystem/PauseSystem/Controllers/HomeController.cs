@@ -13,7 +13,7 @@ namespace PauseSystem.Controllers
     public class HomeController : Controller
     {
         UnitOfWork unitOfWork = new UnitOfWork();
-
+        IRepository<Produkt> produktRepository;
 
         [AllowAnonymous]
         public ActionResult Index()
@@ -68,7 +68,33 @@ namespace PauseSystem.Controllers
             return this.ToJsonResult(date);
         }
 
+        [HttpPost]
+        public ActionResult AjaxUpdateAntal(int produktNumber, int operation)
+        {
+            //operation = 0 to decrease & 1 to increase
+            return this.ToJsonResult(produktNumber);
+        }
+        
+        [HttpPost]
+        public JsonResult GetProductName(string filterKey, int limit = 10)
+        {
+            produktRepository = unitOfWork.Repository<Produkt>();
+            return Json(produktRepository.AsQuerable().Where(x => x.Navn.ToLower().Contains(filterKey.ToLower())).Select(x => new
+            {
+                img = "/Content/Images/loading.gif",
+                price = x.KostPris,
+                text = x.Navn,
+                value = x.Id,
+                varenr = x.ProduktNr,
+                sprice = x.SalgsPris
+            }).Take(limit).ToArray(), JsonRequestBehavior.AllowGet);
+        }
 
+        [HttpPost]
+        public ActionResult AjaxAddNewProductRow(int id)
+        {
+            return this.ToJsonResult(id);
+        }
 
         //[Authorize(Roles = RoleTypes.Customer)]
         //public ActionResult About()
