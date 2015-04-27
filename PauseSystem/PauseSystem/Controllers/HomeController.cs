@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using PauseSystem.Models;
 
 namespace PauseSystem.Controllers
 {
@@ -13,14 +14,13 @@ namespace PauseSystem.Controllers
     public class HomeController : Controller
     {
         UnitOfWork unitOfWork = new UnitOfWork();
-        IRepository<Produkt> produktRepository;
 
         [AllowAnonymous]
         public ActionResult Index()
         {
             if (PauseSecurity.IsAuthenticated)
             {
-                return View("Livering",GetDeliveries( DateTime.Now.AddMonths(-1), DateTime.Now));
+                return View("Livering", GetDeliveries(DateTime.Now.AddMonths(-1), DateTime.Now));
             }
             return View();
         }
@@ -57,7 +57,7 @@ namespace PauseSystem.Controllers
         {
             // Write the code to delete delivery here
 
-           return this.ToJsonResult(id);
+            return this.ToJsonResult(id);
         }
 
         [HttpPost]
@@ -69,44 +69,55 @@ namespace PauseSystem.Controllers
         }
 
         [HttpPost]
-        public ActionResult AjaxUpdateAntal(int produktNumber, int operation)
+        public ActionResult AjaxChangeAntalValue(int produktNumber, int value, string mode)
         {
-            //operation = 0 to decrease & 1 to increase
-            return this.ToJsonResult(produktNumber);
-        }
-        
-        [HttpPost]
-        public JsonResult GetProductName(string filterKey, int limit = 10)
-        {
-            produktRepository = unitOfWork.Repository<Produkt>();
-            return Json(produktRepository.AsQuerable().Where(x => x.Navn.ToLower().Contains(filterKey.ToLower())).Select(x => new
+            if (mode == "+")
             {
-                img = "/Content/Images/loading.gif",
-                price = x.KostPris,
-                text = x.Navn,
-                value = x.Id,
-                varenr = x.ProduktNr,
-                sprice = x.SalgsPris
-            }).Take(limit).ToArray(), JsonRequestBehavior.AllowGet);
+                value += 1;
+                // Write the code to increase Antal value
+
+            }
+            else if (value > 0)
+            {
+                value -= 1;
+                // Write the code to decrease Antal value
+            }
+            return this.Content(value.ToString());
         }
 
         [HttpPost]
-        public ActionResult AjaxAddNewProductRow(int id)
+        public JsonResult AjaxSearchProdukt(string q, int limit = 10)
         {
-            return this.ToJsonResult(id);
+            var query = unitOfWork.Repository<Produkt>().AsQuerable().Where(x => 
+                x.Active == true
+                &&
+                (x.Navn.Contains(q) || x.ProduktNr.ToString().Contains(q))
+                //x.Navn.ToLower().Contains(q.ToLower())
+            ).Take(limit);
+            var result = query.Select(x => new ProduktSearchResult
+            {
+                Id = x.Id,
+                ProduktName = x.Navn,
+                Icon = "/Images/img1.jpg",
+                Price = x.KostPris,
+                ProducktNr = x.ProduktNr
+            });
+
+            return this.ToJsonResult(result);
         }
 
-        //[Authorize(Roles = RoleTypes.Customer)]
-        //public ActionResult About()
-        //{
-        //    ViewBag.Message = "Your application description page.";
-        //    return View();
-        //}
-
-        //public ActionResult Contact()
-        //{
-        //    ViewBag.Message = "Your contact page.";
-        //    return View();
-        //}
+        [HttpPost]
+        public PartialViewResult AjaxAddProduct(int producktNr)
+        {
+            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == producktNr);
+            return PartialView("_UCDelivery", new CustomerDelivery
+            {
+                Number = 1,
+                ProduktNumber = produkt.ProduktNr,
+                Produkt = produkt.Navn,
+                Id = produkt.Id,
+                Pris = produkt.SalgsPris
+            });  
+        }
     }
 }

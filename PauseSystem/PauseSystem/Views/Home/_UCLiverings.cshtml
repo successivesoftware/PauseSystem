@@ -1,130 +1,84 @@
 ﻿@model IEnumerable<PauseSystem.Models.CustomerDeliveryAdresses>
 
-    @if (!Model.Any())
-    {
-        <p class="norecord"> @PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
-        return;
-    }
-    <div class="col-md-0"> Adresse: @ViewBag.Adresse </div>
+@if (!Model.Any())
+{
+    <p class="norecord"> @PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
+    return;
+}
+<div class="col-md-0"> Adresse: @ViewBag.Adresse </div>
 
-    <div class="table-responsive">
+<div class="table-responsive">
 
-        <table class="table table-bordered table-striped table-condensed" id="productTableId">
-            @foreach (var cda in Model)
+    <table class="table table-bordered table-striped table-condensed" id="productTableId">
+        @foreach (var cda in Model)
+        {
+            <tr class="success">
+                <td>Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+            </tr>
+            foreach (var cd in cda.DeliveryWeeks)
             {
-                <tr class="success">
-                    <td>Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+                <tr>
+                    <td>Uge: @cd.Week </td>
                 </tr>
-                foreach (var cd in cda.DeliveryWeeks)
+
+                foreach (var dd in cd.DeliverDates)
                 {
-                    <tr>
-                        <td>Uge: @cd.Week </td>
+                    var trId = dd.Date.ToString("ddMMyyyy");
+                    <tr id="@trId">
+                        <td>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td style="color:red;" colspan="6">
+                                        @dd.DayOfWeek, @dd.DateString
+                                        @Ajax.ActionLink("Delete", "AjaxDeleteDeliveryWeek", String.Empty, new { date = dd.Date.ToString() },
+                                                new AjaxOptions
+                                                {
+                                                    HttpMethod = "Post",
+                                                    Confirm = "Do you want to delete all deleveries for this date?",
+                                                    LoadingElementId = "bgLoader",
+                                                    OnComplete = String.Format("jsLiverenger.deleteDeliveryWeek('{0}',xhr)", trId) // "jsLiverenger.deleteDeliveryWeek('" + trId + "',xhr)"
+                                                }, htmlAttributes: new { @class = "btn btn-primary btn-xs pull-right", title = "Delete" }
+                                            )
+
+                                    </td>
+                                </tr>
+
+                                <tr class="warning">
+                                    <td>Antal</td>
+                                    <td>Varenr</td>
+                                    <td>Beskrivelse</td>
+                                    <td>Pris</td>
+                                    <td>Samplet pris</td>
+                                    <td>Action</td>
+                                </tr>
+
+                                @foreach (var d in dd.Deliveries)
+                                {
+                                    @Html.Partial("_UCDelivery", d);
+                                }
+
+                                <tr id="search_@trId">
+                                    <td colspan="6">
+                                        <div class="col-md-6">
+                                            @Html.Partial("_UCSearchProdukts", new PauseSystem.Models.ProducktSearchModel { OnSelect = "jsLiverenger.addProduct", ContainerId = "search_" + trId })
+                                        </div>
+                                        @*<input type="button" class="btn btn-info btn-xs pull-right" value="Add Row" onclick="$(this).prev().show(); " />*@
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
                     </tr>
-
-                    foreach (var dd in cd.DeliverDates)
-                    {
-                        <tr id="@dd.Date.ToString("ddMMyyyy")">
-                            <td>
-                                <table id=@string.Format("table_{0}",dd.Date.ToString("ddMMyyyy")) class="table table-bordered">
-                                    <tr>
-                                        <td style="color:red;" colspan="6">
-                                            @dd.DayOfWeek, @dd.DateString
-                                            @Ajax.ActionLink("Delete", "AjaxDeleteDeliveryWeek", new { date = dd.Date.ToString() },
-                                        new AjaxOptions
-                                        {
-                                            HttpMethod = "Post",
-                                            Confirm = "Do you want to delete all deleveries for this date?",
-                                            LoadingElementId = "bgLoader",
-                                            OnComplete = "jsLiverenger.deleteDeliveryWeek('" + (dd.Date.ToString("ddMMyyyy")) + "',xhr)"
-                                        }, htmlAttributes: new { @class = "pull-right" })
-
-                                            <button class="btn btn-primary btn-xs pull-right" onclick="jsLiverenger.addTypeaheadRow('@cd.Week@dd.DayOfWeek')">Add Row</button>
-
-                                        </td>
-                                    </tr>
-
-                                    <tr class="warning">
-                                        <td>Antal</td>
-                                        <td>Varenr</td>
-                                        <td>Beskrivelse</td>
-                                        <td>Pris</td>
-                                        <td>Samplet pris</td>
-                                        <td>Action</td>
-                                    </tr>
-
-                                    @foreach (var d in dd.Deliveries)
-                                    {
-                                        <tr id="@d.Id">
-                                            <td>
-                                                <div id="@string.Format("{0}{1}", "Antal" , d.Id)" style="float:left">@d.Number</div>
-                                                @Ajax.ActionLink("+", "AjaxUpdateAntal", new { produktNumber = d.ProduktNumber, operation = 1 }, //1 to increase
-                                                new AjaxOptions
-                                                {
-                                                    HttpMethod = "Post",
-                                                    LoadingElementId = "bgLoader",
-                                                    OnComplete = "jsLiverenger.updateAntal('" + (string.Format("{0}{1}", "Antal", d.Id)) + "'," + (1) + ")"
-                                                })
-
-                                                @Ajax.ActionLink("-", "AjaxUpdateAntal", new { produktNumber = d.ProduktNumber, operation = 0 }, // 0 to decrease
-                                                new AjaxOptions
-                                                {
-                                                    HttpMethod = "Post",
-                                                    LoadingElementId = "bgLoader",
-                                                    OnComplete = "jsLiverenger.updateAntal('" + (string.Format("{0}{1}", "Antal", d.Id)) + "'," + (0) + ")"
-                                                })
-
-                                            </td>
-                                            <td>@d.ProduktNumber</td>
-                                            <td>@d.Produkt</td>
-                                            <td>@d.Pris</td>
-                                            <td>@d.Pris</td>
-                                            <td>
-                                                @Ajax.ActionLink("Delete", "AjaxDeleteDelivery", new { id = d.Id },
-                                            new AjaxOptions
-                                            {
-                                                HttpMethod = "Post",
-                                                Confirm = "Do you want to delete this delivery?",
-                                                LoadingElementId = "bgLoader",
-                                                OnComplete = "jsLiverenger.deleteDelivery('" + (d.Id) + "',xhr)"
-                                            })
-                                            </td>
-                                        </tr>
-                                    }
-
-
-                                </table>
-                                <table >
-                                    <tr id="@string.Format("{0}{1}", cd.Week, dd.DayOfWeek)" style="display:none">
-                                        <td>Product</td>
-                                        <td colspan="3">
-                                            .<input type="text" class="input-md" id=@string.Format("product_{0}{1}", cd.Week, dd.DayOfWeek) action-type="typeahead" action-data="@string.Format("{0}{1}", cd.Week, dd.DayOfWeek)" size="75" />
-                                        </td>
-                                        <td>
-                                            <input type="hidden" id=@string.Format("hiddenProductId_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                            <input type="hidden" id=@string.Format("hiddenProductAntal_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                            <input type="hidden" id=@string.Format("hiddenProductVarenr_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                            <input type="hidden" id=@string.Format("hiddenProductBeskrivelse_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                            <input type="hidden" id=@string.Format("hiddenProductPris_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                            <input type="hidden" id=@string.Format("hiddenProductSPris_product_{0}{1}", cd.Week, dd.DayOfWeek) />
-                                        </td>
-                                        <td>
-                                            @Ajax.ActionLink("Add", "AjaxAddNewProductRow", new { id = 1 },
-                                            new AjaxOptions
-                                            {
-                                                HttpMethod = "Post",
-                                                LoadingElementId = "bgLoader",
-                                                OnComplete = "jsLiverenger.addNewRow('" + (string.Format("product_{0}{1}", cd.Week, dd.DayOfWeek)) + "', '" + (string.Format("table_{0}",dd.Date.ToString("ddMMyyyy"))) + "')"
-                                            })
-                                        </td>
-                                    </tr>
-                                </table>
-                                <hr />
-                            </td>
-                        </tr>
-                    }
                 }
             }
-        </table>
+        }
+    </table>
 
 
-    </div>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        jsLiverenger.initiateAutocompleter();
+    })
+</script>

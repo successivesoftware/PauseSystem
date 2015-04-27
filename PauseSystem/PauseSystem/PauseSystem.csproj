@@ -154,7 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="Helpers\CustomFilters.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -166,6 +165,7 @@
     </Compile>
     <Compile Include="Helpers\CustomDateTime.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
     <Compile Include="Helpers\PauseHelper.cs" />
     <Compile Include="Helpers\PauseSecurity.cs" />
@@ -300,6 +300,7 @@
     <Compile Include="Models\Entity\UgeStatistik.cs" />
     <Compile Include="Models\Entity\VersionLog.cs" />
     <Compile Include="Models\Entity\Week.cs" />
+    <Compile Include="Models\ProducktSearchModel.cs" />
     <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\Extensions\RepositoryExtentions.cs" />
     <Compile Include="Models\TEntity.cs" />
@@ -320,6 +321,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\firmafrugt.gif" />
+    <Content Include="Images\img1.jpg" />
+    <Content Include="Images\img2.jpg" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
     <Content Include="Scripts\bootstrap.js" />
@@ -327,7 +330,6 @@
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Properties\PublishProfiles\LocalIIS.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -362,9 +364,12 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\_UCLiverings.cshtml" />
     <Content Include="Views\Home\Livering.cshtml" />
+    <Content Include="Views\Shared\_UCSearchProdukts.cshtml" />
+    <Content Include="Views\Home\_UCDelivery.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Extension\" />
   </ItemGroup>
   <ItemGroup>
@@ -392,7 +397,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>6833</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1344/</IISUrl>
+          <IISUrl>http://localhost:1345/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

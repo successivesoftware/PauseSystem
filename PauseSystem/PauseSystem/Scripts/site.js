@@ -1,4 +1,15 @@
-﻿
+﻿function executeFunctionByName(functionName) {
+    context = window;
+    var args = [].slice.call(arguments).splice(1);
+    var namespaces = functionName.split(".");
+    var func = namespaces.pop();
+    for (var i = 0; i < namespaces.length; i++) {
+        context = context[namespaces[i]];
+    }
+    return context[func].apply(this, args);
+}
+
+
 var jsLiverenger = {
     deleteDelivery: function (id, jsonResult) {
         var result = global.parseJsonResult(jsonResult);
@@ -23,136 +34,81 @@ var jsLiverenger = {
             responseMessage.showError();
         }
     },
-
-    updateAntal: function (id, operation) {
-
-        var cont = parseInt($("#" + id).text(), 10);
-        if ((operation == 0) && (cont > 0)) {
-            $("#" + id).text(cont - 1);
-        }
-        else if (operation == 1) {
-            $("#" + id).text(cont + 1);
-        }
+    changeAntal: function (producktNo, targetId, mode) {
+        var value = document.getElementById(targetId).innerHTML;
+        ajaxLoader.show();
+        $.post('Home/AjaxChangeAntalValue', { produktNumber: producktNo, value: value, mode: mode }, function (result) {
+            ajaxLoader.hide();
+            document.getElementById(targetId).innerHTML = result;
+        })
     },
 
-    addTypeaheadRow: function (id) {
-        $("#" + id).show();
+    addProduct: function (item, containerId) {
+        ajaxLoader.show();
+        $.post('Home/AjaxAddProduct', { producktNr: item.ProducktNr }, function (html) {
+            ajaxLoader.hide();
+            $("#" + containerId).before(html);
+            $("#" + containerId).find('input').val('');
+        })
     },
 
     initiateAutocompleter: function () {
-
         $("input[type=text][action-type=typeahead]").each(function () {
-
-            var $productName = $("#product_" + $(this).attr("action-data")); 
-            var $productId = $("#hiddenProductId_product_" + $(this).attr("action-data"));
-            var $productVarenr = $("#hiddenProductVarenr_product_" + $(this).attr("action-data"));
-            var $productBeskrivelse = $("#hiddenProductBeskrivelse_product_" + $(this).attr("action-data"));
-            var $productPris = $("#hiddenProductPris_product_" + $(this).attr("action-data"));
-            var $productSPris = $("#hiddenProductSPris_product_" + $(this).attr("action-data"));
-
-            var temp = {};
-            $productName.typeahead({
-                
+            var $elm = $(this);
+            var funcSelect = $elm.attr("action-onselect");
+            var containerId = $elm.attr("data-container");
+            $elm.typeahead({
+                minLength:3,
                 source: function (query, process) {
-
-                    var $items = [""];
-
-                    $.post("http://localhost:1344/home/getProductName", { "filterKey": query, "limit": 5 }, function (data) {
-
-                        if (data.length != 0) {
-
-                            $productId.val(data[0].value);
-                            $productVarenr.val(data[0].varenr);
-                            $productBeskrivelse.val(data[0].text);
-                            $productPris.val(data[0].price);
-                            $productSPris.val(data[0].sprice);
-
-                            $.map(data, function (item) {
-
-                                var group = {
-
-                                    id: item.value,
-
-                                    name: item.text,
-
-                                    img: item.img,
-
-                                    price: item.price,
-
-                                    varenr: item.varenr,
-
-                                    sprice: item.sprice
-
-
-                                };
-
-                                $items.push(group);
-                                temp[item.text] = item;
-                            });
-
-                            process($items);
-
-                        } else {
-
-                            $productName.typeahead('hide');
-
-                            $productId.val('');
+                    $.post("/Home/AjaxSearchProdukt", { "q": query, "limit": 5 }, function (response) {
+                        if (response.isSuccess) {
+                            var data = response.data;
+                            if (data.length != 0) {
+                                process(data);
+                            } else {
+                                $elm.typeahead('hide');
+                            }
                         }
                     });
                 },
-                
-                highlighter: function (item) {
-                    var productObject = temp[item];
-                    return '<div class="test">' + '<img src="' + productObject.img + '" /> | ' + '<strong>' + productObject.text + '</strong> | ' + productObject.price + ' </div>';
-                },
-
+                highlighter: function (name) { return name; },
                 items: 5,
-
-                minLength: 1,
-
                 highlight: true,
-
-                updater: function (selectedItem) {
-                    $productId.val(selectedItem.id);
-                    $productVarenr.val(selectedItem.varenr);
-                    $productBeskrivelse.val(selectedItem.name);
-                    $productPris.val(selectedItem.price);
-                    $productSPris.val(selectedItem.sprice);
-                    return selectedItem.name;
-                },
-
-                clear: function () {
-
-                    if (common.isNullOrEmpty($ContactName.val())) {
-
-                        $productId.val('');
+                updater: function (item) {
+                    try {
+                        if (funcSelect) executeFunctionByName(funcSelect, item, containerId);
                     }
+                    catch (e) { console.log(e); }
+                    return item.ProduktName;
+                },
+                clear: function () {
+                    $elm.val("");
                 }
             })
         });
     },
 
-    addNewRow: function (id, tableId) {
-        var id = $("#hiddenProductId_" + id).val();
-        var antal = $("#hiddenProductAntal_" + id).value;
-        var varenr = $("#hiddenProductVarenr_" + id).val();
-        var beskrivelse = $("#hiddenProductBeskrivelse_" + id).attr("value");
-        var pris = $("#hiddenProductPris_" + id).value;
-        var sPris = $("#hiddenProductSPris_" + id).value;
-        var row = '<tr>'
-                    + '<td>' + antal + '</td>'
-                    + '<td>' + varenr + '</td>'
-                    + '<td>' + beskrivelse + '</td>'
-                    + '<td>' + pris + '</td>'
-                    + '<td>' + sPris + '</td>'
-                    + '</tr>'
 
-        $("#" + tableId).append(row);
+    //addNewRow: function (id, tableId) {
+    //    var id = $("#hiddenProductId_" + id).val();
+    //    var antal = $("#hiddenProductAntal_" + id).value;
+    //    var varenr = $("#hiddenProductVarenr_" + id).val();
+    //    var beskrivelse = $("#hiddenProductBeskrivelse_" + id).attr("value");
+    //    var pris = $("#hiddenProductPris_" + id).value;
+    //    var sPris = $("#hiddenProductSPris_" + id).value;
+    //    var row = '<tr>'
+    //                + '<td>' + antal + '</td>'
+    //                + '<td>' + varenr + '</td>'
+    //                + '<td>' + beskrivelse + '</td>'
+    //                + '<td>' + pris + '</td>'
+    //                + '<td>' + sPris + '</td>'
+    //                + '</tr>'
 
+    //    $("#" + tableId).append(row);
+    //}
 
-    }
 }
 
-$(document).ready(function () {
-    jsLiverenger.initiateAutocompleter();
-})
+//$(document).ready(function () {
+//    jsLiverenger.initiateAutocompleter();
+//})
