@@ -60,7 +60,7 @@ var jsLiverenger = {
             $elm.typeahead({
                 minLength:3,
                 source: function (query, process) {
-                    $.post("/Home/AjaxSearchProdukt", { "q": query, "limit": 5 }, function (response) {
+                    $.post("Home/AjaxSearchProdukt", { "q": query, "limit": 5 }, function (response) {
                         if (response.isSuccess) {
                             var data = response.data;
                             if (data.length != 0) {

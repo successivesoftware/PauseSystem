@@ -10,9 +10,12 @@ using PauseSystem.Models;
 
 namespace PauseSystem.Controllers
 {
+
+
     [Authorize]
     public class HomeController : Controller
     {
+
         UnitOfWork unitOfWork = new UnitOfWork();
 
         [AllowAnonymous]
@@ -28,6 +31,7 @@ namespace PauseSystem.Controllers
         [HttpPost]
         public ActionResult Index(DateTime? startDate, DateTime? endDate)
         {
+
             if (!startDate.HasValue)
                 ModelState.AddModelError("StartDate", "StartDate field is required.");
             else if (!endDate.HasValue)
@@ -98,7 +102,7 @@ namespace PauseSystem.Controllers
             {
                 Id = x.Id,
                 ProduktName = x.Navn,
-                Icon = "/Images/img1.jpg",
+                Icon = "Images/img1.jpg",
                 Price = x.KostPris,
                 ProducktNr = x.ProduktNr
             });

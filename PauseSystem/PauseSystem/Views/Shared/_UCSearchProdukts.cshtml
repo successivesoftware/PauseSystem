@@ -1,0 +1,8 @@
+﻿@model PauseSystem.Models.ProducktSearchModel
+
+<div class="form-horizontal">
+    <input type="text" placeholder="search produkts" class="form-control" action-type="typeahead" action-onselect="@Model.OnSelect" data-container="@Model.ContainerId" />
+    <input name="search_data" type="hidden" value="" />
+</div>
+
+

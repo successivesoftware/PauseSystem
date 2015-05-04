@@ -25,6 +25,7 @@ namespace PauseSystem.Models
         public FrugtContext()
             : base("Name=FrugtContext")
         {
+                
         }
 
        
