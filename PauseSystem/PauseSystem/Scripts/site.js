@@ -133,12 +133,12 @@ var jsLiverenger = {
     },
 
     addNewRow: function (id, tableId) {
-        var ids = $("#hiddenProductId_" + id).val();
-        var antal = $("#hiddenProductAntal_" + id).val();
+        var id = $("#hiddenProductId_" + id).val();
+        var antal = $("#hiddenProductAntal_" + id).value;
         var varenr = $("#hiddenProductVarenr_" + id).val();
-        var beskrivelse = $("#hiddenProductBeskrivelse_" + id).val();
-        var pris = $("#hiddenProductPris_" + id).val();
-        var sPris = $("#hiddenProductSPris_" + id).val();
+        var beskrivelse = $("#hiddenProductBeskrivelse_" + id).attr("value");
+        var pris = $("#hiddenProductPris_" + id).value;
+        var sPris = $("#hiddenProductSPris_" + id).value;
         var row = '<tr>'
                     + '<td>' + antal + '</td>'
                     + '<td>' + varenr + '</td>'
