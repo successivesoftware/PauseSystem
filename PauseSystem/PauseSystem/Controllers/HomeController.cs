@@ -1,16 +1,12 @@
-﻿using PauseSystem.Helpers;
-using PauseSystem.Models;
+﻿using PauseSystem.Models;
 using PauseSystem.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using PauseSystem.Models;
 
 namespace PauseSystem.Controllers
 {
-
 
     [Authorize]
     public class HomeController : Controller
@@ -23,7 +19,7 @@ namespace PauseSystem.Controllers
         {
             if (PauseSecurity.IsAuthenticated)
             {
-                return View("Livering", GetDeliveries(DateTime.Now.AddMonths(-1), DateTime.Now));
+                return View("Livering", GetDeliveries(DateTime.Now.AddDays(-30), DateTime.Now));
             }
             return View();
         }
@@ -31,7 +27,6 @@ namespace PauseSystem.Controllers
         [HttpPost]
         public ActionResult Index(DateTime? startDate, DateTime? endDate)
         {
-
             if (!startDate.HasValue)
                 ModelState.AddModelError("StartDate", "StartDate field is required.");
             else if (!endDate.HasValue)
@@ -47,14 +42,12 @@ namespace PauseSystem.Controllers
             return View(GetDeliveries(startDate.Value, endDate.Value));
         }
 
-
         private IList<CustomerDeliveryAdresses> GetDeliveries(DateTime startDate, DateTime endDate)
         {
             ViewBag.StartDate = startDate.ToDateString();
             ViewBag.EndDate = endDate.ToDateString();
             return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, PauseSecurity.GetUserId());
         }
-
 
         [HttpPost]
         public JsonResult AjaxDeleteDelivery(int id)
@@ -123,5 +116,7 @@ namespace PauseSystem.Controllers
                 Pris = produkt.SalgsPris
             });  
         }
+
+
     }
 }

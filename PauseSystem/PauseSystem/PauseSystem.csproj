@@ -167,7 +167,7 @@
     <Compile Include="Helpers\ExtensionMethods.cs" />
     <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
-    <Compile Include="Helpers\PauseHelper.cs" />
+    <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\PauseSecurity.cs" />
     <Compile Include="Helpers\TimeTool.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
