@@ -11,11 +11,9 @@ namespace PauseSystem.Models
         public LeveringModel()
         {
             CustomerDeliveryAdresses = new List<CustomerDeliveryAdresses>();
-            StartDate = DateTime.Today;
-            EndDate = DateTime.Today.AddDays(10);
+            
         }
 
-        [Required]
         public string KundeName { get; set; }
         public int KundeId { get; set; }
 

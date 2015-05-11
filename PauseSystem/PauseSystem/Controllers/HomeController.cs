@@ -11,15 +11,21 @@ namespace PauseSystem.Controllers
     [Authorize]
     public class HomeController : Controller
     {
-
         UnitOfWork unitOfWork = new UnitOfWork();
 
         [AllowAnonymous]
         public ActionResult Index()
         {
+
             if (PauseSecurity.IsAuthenticated)
             {
-                return View("Levering", new LeveringModel());
+                var model = new LeveringModel() { StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(10) };
+                if (PauseSecurity.IsInRole(RoleTypes.Customer))
+                {
+                    model.KundeId = PauseSecurity.GetUserId();
+                    model.CustomerDeliveryAdresses = GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
+                }
+                return View("Levering", model);
             }
             return View();
         }
@@ -27,6 +33,11 @@ namespace PauseSystem.Controllers
         [HttpPost]
         public ActionResult Index(LeveringModel model)
         {
+            // Change KundeId if user is customer
+            if (PauseSecurity.IsInRole(RoleTypes.Customer))
+            {
+                model.KundeId = PauseSecurity.GetUserId();
+            }
             if (model.KundeId <= 0)
             {
                 ModelState.AddModelError("KundeName", "Kunde eksisterer ikke.");
@@ -39,6 +50,7 @@ namespace PauseSystem.Controllers
             {
                 return View("Levering", model);
             }
+           
             model.CustomerDeliveryAdresses =  GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
             return View("Levering", model);
         }
@@ -92,6 +104,7 @@ namespace PauseSystem.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = RoleTypes.Employee)]
         public JsonResult AjaxGetKunder(string query)
         {
             var qprodukt = unitOfWork.Repository<Kunde>().AsQuerable()
@@ -158,11 +171,6 @@ namespace PauseSystem.Controllers
 
         #endregion
 
-        //private string GetCustomerSearchOutputHtml(string name, double price, string icon)
-        //{
-        //    return String.Format("<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>",
-        //                icon, name, price);
-        //}
 
     }
 
