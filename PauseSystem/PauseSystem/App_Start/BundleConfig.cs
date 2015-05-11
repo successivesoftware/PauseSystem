@@ -27,15 +27,16 @@ namespace PauseSystem
                       "~/Scripts/respond.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/custom").Include(
-                   "~/Scripts/global.js",
-                   "~/Scripts/site.js"
+                   "~/Scripts/global.js"
+                   ,"~/Scripts/site.js"
+                   , "~/Scripts/bootstrap-typeahead.min.js"
                    ));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
                       "~/Content/bootstrap.css",
                       "~/Content/bootstrap-datepicker3.css",
                       "~/Content/site.css"));
-            BundleTable.EnableOptimizations = true;
+        //    BundleTable.EnableOptimizations = true;
         }
     }
 }

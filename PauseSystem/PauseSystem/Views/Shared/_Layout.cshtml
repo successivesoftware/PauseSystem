@@ -12,16 +12,12 @@
         appBaseURL = '@PauseSystem.Helpers.AppSettings.BaseUrl';
         appDateFormat =  '@CustomDateTime.GetFormat(CustomDateTimeFormats.DefaultDate).ToLower().Replace("'","")';
         appDateTimeFormat = '@CustomDateTime.GetFormat(CustomDateTimeFormats.DefaultDateTime).ToLower().Replace("'","")';
+        serverResponseMessage = '@TempData["ServerResponseMessage"]';
     </script>
 </head>
 <body>
 
-    <div id="bgLoader" style="display:none">
-        <div class="fade"></div>
-        <div class="loader">
-            <img src="~/Content/Images/loading.gif" />
-        </div>
-    </div>
+   
 
     <div class="navbar navbar-static-top" role="banner">
         <div class="container">

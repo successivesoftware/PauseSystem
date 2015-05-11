@@ -1,0 +1,78 @@
+﻿@model IEnumerable<PauseSystem.Models.CustomerDeliveryAdresses>
+
+@if (!Model.Any())
+{
+    <p class="norecord">@PauseSystem.Helpers.MessageHelper.NoRecordFound </p>
+    return;
+}
+<div class="col-md-0"> Adresse: @ViewBag.Adresse </div>
+
+<div class="table-responsive">
+
+    <table class="table table-bordered table-striped table-condensed" id="productTableId">
+        @foreach (var cda in Model)
+        {
+            <tr class="success">
+                <td>Address: @cda.Adress , @cda.PostalCode , @cda.City </td>
+            </tr>
+            foreach (var cd in cda.DeliveryWeeks)
+            {
+                <tr>
+                    <td>Uge: @cd.Week </td>
+                </tr>
+
+                foreach (var dd in cd.DeliverDates)
+                {
+                    var trId = dd.Date.ToString("ddMMyyyy");
+                    <tr id="@trId">
+                        <td>
+                            <table class="table table-bordered">
+                                <tr>
+                                    <td style="color:red;" colspan="6">
+                                        @dd.DayOfWeek, @dd.DateString
+                                        @Ajax.ActionLink("Delete", "AjaxDeleteDeliveryWeek", String.Empty, new { date = dd.Date.ToString() },
+                                                new AjaxOptions
+                                                {
+                                                    HttpMethod = "Post",
+                                                    Confirm = "Do you want to delete all deleveries for this date?",
+                                                    LoadingElementId = "bgLoader",
+                                                    OnComplete = String.Format("jsLiverenger.deleteDeliveryWeek('{0}',xhr)", trId) // "jsLiverenger.deleteDeliveryWeek('" + trId + "',xhr)"
+                                                }, htmlAttributes: new { @class = "btn btn-primary btn-xs pull-right", title = "Delete" }
+                                            )
+
+                                    </td>
+                                </tr>
+
+                                <tr class="warning">
+                                    <td>Antal</td>
+                                    <td>Varenr</td>
+                                    <td>Beskrivelse</td>
+                                    <td>Pris</td>
+                                    <td>Samplet pris</td>
+                                    <td>Action</td>
+                                </tr>
+
+                                @foreach (var d in dd.Deliveries)
+                                {
+                                    @Html.Partial("_UCDelivery", d);
+                                }
+
+                                <tr id="search_@trId">
+                                    <td colspan="6">
+                                        <div class="col-md-6">
+                                            @Html.TextBox("SearchProdukt", "", new { @class = "form-control typeahead search-produkt", placeholder = "Search Produkt (min 3 chars)", data_container = "search_" + trId })
+                                        </div>
+                                    </td>
+                                </tr>
+
+                            </table>
+                        </td>
+                    </tr>
+                }
+            }
+        }
+    </table>
+
+
+</div>
+

@@ -9,27 +9,6 @@ namespace PauseSystem.Models.Entity
 {
     public static class RepositoryExtentions
     {
-        //public static IList<CustomerDelivery> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork,
-        //    DateTime startDate, DateTime endDate, int? kundeId)
-        //{
-        //    var qLeveringsProdukt = repository.AsQuerable();
-        //    qLeveringsProdukt = qLeveringsProdukt.Where(x => x.TurLevering.Ture.Dato >= startDate && x.TurLevering.Ture.Dato <= endDate);
-        //    if (kundeId.HasValue)
-        //        qLeveringsProdukt = qLeveringsProdukt.Where(x => x.TurLevering.KundeId == kundeId.Value);
-
-        //    return qLeveringsProdukt.Take(20).Select(x => new CustomerDelivery
-        //    {
-        //        Antal = x.Antal,
-        //        VareNr = x.ProduktNr,
-        //        Beskrivelse = x.Produkt.Navn,
-        //        Pris = x.SalgsPris,
-        //        SampletPris = x.SalgsPris
-        //    }).ToList();
-
-
-
-
-        //}
 
         public static IList<CustomerDeliveryAdresses> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork,
             DateTime startDate, DateTime endDate, int kundeId)
@@ -39,10 +18,7 @@ namespace PauseSystem.Models.Entity
             startDate = startDate.Date;
             endDate = endDate.Date;
 
-            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date
-                && l.KundeId == kundeId
-                );
-
+            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date && l.KundeId == kundeId);
             var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
             var leveringDateMax = leveringMonday > startDate ? leveringMonday : startDate;
             if (qleveringer.Any())
@@ -85,17 +61,6 @@ namespace PauseSystem.Models.Entity
             var produkter = finalProdukter.OrderBy(p => p.TurLevering.Ture.Dato).ThenBy(p => p.Produkt.Navn).ToList();
             foreach (var levering in produkter.Where(p => p.TurLevering.Ture.Dato.Date >= startDate.Date && p.TurLevering.Ture.Dato <= endDate.Date))
             {
-
-                //var idelivery = deliveries.Where(d => (d.AdressId == levering.TurLevering.AdresseId));
-                //if (idelivery == null)
-                //{
-                //    deliveries.Add(CustomerDeliveryAdresses.CreateInstance(levering));
-                //}
-                //else
-                //{ 
-                    
-                //}
-
 
                 if (deliveries.Any(m => m.AdressId == levering.TurLevering.AdresseId))
                 {

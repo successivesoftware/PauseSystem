@@ -19,51 +19,93 @@ namespace PauseSystem.Controllers
         {
             if (PauseSecurity.IsAuthenticated)
             {
-                return View("Livering", GetDeliveries(DateTime.Now.AddDays(-30), DateTime.Now));
+                return View("Levering", new LeveringModel());
             }
             return View();
         }
 
         [HttpPost]
-        public ActionResult Index(DateTime? startDate, DateTime? endDate)
+        public ActionResult Index(LeveringModel model)
         {
-            if (!startDate.HasValue)
-                ModelState.AddModelError("StartDate", "StartDate field is required.");
-            else if (!endDate.HasValue)
-                ModelState.AddModelError("EndDate", "StartDate field is required.");
-            else if (CustomDateTime.IsPastDate(endDate.Value))
-                ModelState.AddModelError("EndDate", "EndDate should not be past date.");
-            else if (endDate.Value < startDate.Value)
-                ModelState.AddModelError("EndDate", "EndDate should not be be less StartDate.");
+            if (model.KundeId <= 0)
+            {
+                ModelState.AddModelError("KundeName", "Kunde eksisterer ikke.");
+            }
+            else if (model.EndDate < model.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "Slutdato bør ikke være mindre Startdato.");
+            }
             if (!ModelState.IsValid)
             {
-                return View(new List<CustomerDeliveryAdresses>());
+                return View("Levering", model);
             }
-            return View(GetDeliveries(startDate.Value, endDate.Value));
+            model.CustomerDeliveryAdresses =  GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
+            return View("Levering", model);
+        }
+     
+
+        #region Private Methods
+     
+        
+        private string GetProduktSearchOutputHtml(string name, double price, string icon)
+        {
+            return String.Format("<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>",
+                        icon, name, price);
         }
 
-        private IList<CustomerDeliveryAdresses> GetDeliveries(DateTime startDate, DateTime endDate)
+        private IList<CustomerDeliveryAdresses> GetCustomerDeliveryAdresses(int kundeId, DateTime startDate, DateTime endDate)
         {
             ViewBag.StartDate = startDate.ToDateString();
             ViewBag.EndDate = endDate.ToDateString();
-            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, PauseSecurity.GetUserId());
+            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, kundeId);
         }
 
-        [HttpPost]
-        public JsonResult AjaxDeleteDelivery(int id)
+
+        #endregion
+
+
+        #region AjaxMethods
+
+        [HttpGet]
+        public JsonResult AjaxGetProdukt(string query)
         {
-            // Write the code to delete delivery here
-
-            return this.ToJsonResult(id);
+            var qprodukt = unitOfWork.Repository<Produkt>().AsQuerable()
+                .Where(p => p.Active == true && (p.Navn.Contains(query) || p.ProduktNr.ToString().Contains(query)))
+                .Take(10)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Name = x.Navn,
+                    Price = x.KostPris,
+                    ProduktNr = x.ProduktNr,
+                }).ToList()
+            .Select(x => new
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Price = x.Price,
+                ProduktNr = x.ProduktNr,
+                HtmlString = GetProduktSearchOutputHtml(x.Name, x.Price, "Images/img1.jpg")
+            });
+            return this.ToJsonResult(qprodukt.ToList());
         }
 
-        [HttpPost]
-        public ActionResult AjaxDeleteDeliveryWeek(string date)
+
+        [HttpGet]
+        public JsonResult AjaxGetKunder(string query)
         {
-            // Write the code to delete delivery week here
-
-            return this.ToJsonResult(date);
+            var qprodukt = unitOfWork.Repository<Kunde>().AsQuerable()
+                .Where(p => p.Navn.Contains(query) || p.Email.ToString().Contains(query))
+                .Take(10)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    DisplayName = x.Navn + " (" + x.Email + ")",
+                    Name = x.Navn,
+                }).ToList();
+            return this.ToJsonResult(qprodukt);
         }
+
 
         [HttpPost]
         public ActionResult AjaxChangeAntalValue(int produktNumber, int value, string mode)
@@ -83,30 +125,9 @@ namespace PauseSystem.Controllers
         }
 
         [HttpPost]
-        public JsonResult AjaxSearchProdukt(string q, int limit = 10)
+        public PartialViewResult AjaxAddProduct(int produktNr)
         {
-            var query = unitOfWork.Repository<Produkt>().AsQuerable().Where(x => 
-                x.Active == true
-                &&
-                (x.Navn.Contains(q) || x.ProduktNr.ToString().Contains(q))
-                //x.Navn.ToLower().Contains(q.ToLower())
-            ).Take(limit);
-            var result = query.Select(x => new ProduktSearchResult
-            {
-                Id = x.Id,
-                ProduktName = x.Navn,
-                Icon = "Images/img1.jpg",
-                Price = x.KostPris,
-                ProducktNr = x.ProduktNr
-            });
-
-            return this.ToJsonResult(result);
-        }
-
-        [HttpPost]
-        public PartialViewResult AjaxAddProduct(int producktNr)
-        {
-            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == producktNr);
+            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == produktNr);
             return PartialView("_UCDelivery", new CustomerDelivery
             {
                 Number = 1,
@@ -114,9 +135,35 @@ namespace PauseSystem.Controllers
                 Produkt = produkt.Navn,
                 Id = produkt.Id,
                 Pris = produkt.SalgsPris
-            });  
+            });
         }
 
+        [HttpPost]
+        public JsonResult AjaxDeleteDelivery(int id)
+        {
+            // Write the code to delete delivery here
+
+            return this.ToJsonResult(id);
+        }
+
+        [HttpPost]
+        public ActionResult AjaxDeleteDeliveryWeek(string date)
+        {
+            // Write the code to delete delivery week here
+
+            return this.ToJsonResult(date);
+        }
+
+       
+
+        #endregion
+
+        //private string GetCustomerSearchOutputHtml(string name, double price, string icon)
+        //{
+        //    return String.Format("<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>",
+        //                icon, name, price);
+        //}
 
     }
+
 }

@@ -68,6 +68,7 @@ namespace PauseSystem
             return ParseToStringFormat(dateTime, CustomDateTimeFormats.DefaultDate);
         }
 
+
        
         /// <summary>
         /// convert datetime to given string format. if datetime is null then returns empty string.

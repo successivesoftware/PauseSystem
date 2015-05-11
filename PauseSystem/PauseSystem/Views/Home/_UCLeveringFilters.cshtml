@@ -1,0 +1,55 @@
+﻿@model PauseSystem.Models.LeveringModel
+<div class="form-horizontal">
+    @using (Html.BeginForm("Index", "Home", FormMethod.Post))
+    {
+        <div class="row">
+            <div class="col-md-6">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Kunde:</label>
+                    <div class="col-sm-9">
+                        <div class="typeahead-container">
+                            @Html.TextBoxFor(x => x.KundeName, htmlAttributes: new { AutoComplete = "Off", @class = "form-control typeahead", placeholder = "Search Kunde", format = "MM" })
+                        </div>
+                        @Html.HiddenFor(x=>x.KundeId)
+                        @Html.ValidationMessageFor(x => x.KundeName)
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="col-sm-3 control-label">Startdato:</label>
+                    <div class="col-sm-9">
+                        <div class="input-group input-append date">
+                            @Html.TextBoxFor(x => x.StartDate, htmlAttributes: new { Value = CustomDateTime.ToDateString(Model.StartDate), @class = "form-control", title = "Startdato", required = true })
+                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.StartDate)
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-3">
+                <div class="form-group">
+                    <label class="col-xs-3 control-label">Slutdato:</label>
+                    <div class="col-xs-9">
+                        <div class="input-group input-append date">
+                            @Html.TextBoxFor(x => x.EndDate, htmlAttributes: new { Value = CustomDateTime.ToDateString(Model.EndDate), @class = "form-control required", title = "Slutdato", required = true })
+                            <span class="input-group-addon add-on"><span class="glyphicon glyphicon-calendar"></span></span>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.EndDate)
+                    </div>
+                </div>
+
+            </div>
+        </div>
+        <div class="row text-right">
+            <div class="col-md-12">
+                <button class="btn btn-primary">Hent Leveringe</button>
+            </div>
+        </div>
+
+    }
+</div>
+

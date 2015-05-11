@@ -1,6 +1,5 @@
 ﻿// These variables are assigned at _Layout page. assigning a value here will overide the existing value. 
-var appBaseURL, appDateFormat, appDateTimeFormat;
-
+var appBaseURL, appDateFormat, appDateTimeFormat, serverResponseMessage;
 
 var global = {
     initdatepicker: function (selector) {
@@ -25,40 +24,65 @@ var global = {
     }
 }
 
-var ajaxLoader = {
-    show: function () {
-        document.getElementById("bgLoader").style.display = "block";
-    },
-    hide: function () {
-        document.getElementById("bgLoader").style.display = "none";
+var ajaxLoader = new function () {
+    var instance = this, elm, img = 'Content/Images/loading.gif'
+        , htmlwrapper = '<div id="bgLoader" style="display:none"><div class="fade"></div><div class="loader"><img src="' + img + '" alt="Processing..." /></div></div>';
+    var init = function () {
+        $("body").prepend(htmlwrapper); elm = document.getElementById("bgLoader");
+    };
+    this.show = function () {
+        elm.style.display = "block";
+    };
+    this.hide = function () {
+        elm.style.display = "none";
+    };
+   init();
+};
+
+var responseMessage = new function () {
+    //can be "alert-warning","alert-danger","alert-primary"
+    var instance = this, $elm, timer = 8000, lastTimoutId = 0
+        , aclasses = ['alert-danger', 'alert-success', 'alert-warning']
+        ,htmlwrapper = '<div id="responseAlertBox" class="alert alert-dismissable" style="position:fixed; display: none; z-index:9999; width:100%;">'
+                    + ' <button type="button" class="close" onclick="$(\'.alert\').slideUp()">&times;</button><div></div></div>';
+    var init = function () {
+        $("body").prepend(htmlwrapper); $elm = $('#responseAlertBox');
+    };
+    this.show = function (text, cIndex, autohide) {
+        // cIndex = 1 => 'Success' , 0 => Error ,2 => Warning
+        clearTimeout(lastTimoutId);
+        cIndex = isNaN(cIndex) ? 1 : cIndex;
+        if (cIndex == 1) {
+            $elm.find('div').html('<strong>Success! </strong> ' + text);
+        }
+        else {
+            $elm.find('div').html('<strong>Error! </strong> ' + text);
+        }
+        $elm.removeClass(aclasses[0]).removeClass(aclasses[1]).removeClass(aclasses[2]).addClass(aclasses[cIndex]);
+        $elm.slideDown();
+        if (autohide == undefined || autohide) {
+            lastTimoutId = setTimeout(function () { instance.hide(); }, timer);
+        }
+    };
+    this.showError = function (text) {
+        if (!text) text = 'Something went wrong!'; responseMessage.show(text, 0);
+    };
+    this.hide = function () {
+        $elm.slideUp();
     }
+    init();
 };
 
 String.prototype.isDate = function () { return !global.isNullOrEmpty(this) && Date.parse(this); }
 Date.prototype.isGreator = function (date2) { return !global.isNullOrEmpty(date2) && (this > Date.parse(date2)); }
 String.prototype.replaceAll = function (token, newToken, ignoreCase) { var _token; var str = this + ""; var i = -1; if (typeof token === "string") { if (ignoreCase) { _token = token.toLowerCase(); while ((i = str.toLowerCase().indexOf(token, i >= 0 ? i + newToken.length : 0)) !== -1) { str = str.substring(0, i) + newToken + str.substring(i + token.length); } } else { return this.split(token).join(newToken); } } return str; };
 
-// can be "alert-warning","alert-danger","alert-primary"
-var responseMessage = {
-    htmlwrapper: '<div id="responseAlertBox" class="alert alert-dismissable" style="position:fixed; display: none; z-index:9999; width:100%;">'
-    + ' <button type="button" class="close" onclick="$(\'.alert\').slideUp()">&times;</button><div></div></div>',
-    timer: 8000,
-    lastTimoutId: 0,
-    init: function () { $("body").prepend(this.htmlwrapper); },
-    show: function (text, alertClass, autohide) {
-        var $elm = $('#responseAlertBox');
-        clearTimeout(responseMessage.lastTimoutId);
-        if (!alertClass) alertClass = 'alert-success';
-        if (alertClass == 'alert-success') { $elm.find('div').html('<strong>Success! </strong>' + text);}
-        else { $elm.find('div').html('<strong>Error! </strong>' + text);}
-        $elm.removeClass('alert-success').removeClass('alert-danger').addClass(alertClass);
-        $elm.slideDown();
-        if (autohide == undefined || autohide) { responseMessage.lastTimoutId = setTimeout(function () { responseMessage.hide(); }, responseMessage.timer);}
-    },
-    showError: function (text) { if (!text) text = 'Something went wrong!'; responseMessage.show(text, 'alert-danger'); },
-    hide: function () { $('#responseAlertBox').slideUp();}
-};
-responseMessage.init();
 
-
-$(document).ready(function () {if (window.ready)window.ready();})
+$(document).ready(function () {
+    if (window.ready) window.ready();
+    if (serverResponseMessage && !global.isNullOrEmpty(serverResponseMessage)) {
+        var smsg = serverResponseMessage.split('_');
+        if(smsg[0] == 'Error') responseMessage.showError(smsg[1]);
+        else responseMessage.show(smsg[1]);
+    }
+});
