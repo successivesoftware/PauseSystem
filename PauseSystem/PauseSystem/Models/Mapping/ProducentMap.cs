@@ -18,6 +18,7 @@ namespace PauseSystem.Models.Mapping
             this.ToTable("Producent");
             this.Property(t => t.Id).HasColumnName("Id");
             this.Property(t => t.Navn).HasColumnName("Navn");
+            this.HasMany(p => p.Produkts).WithOptional(p => p.Producent).HasForeignKey(p => p.ProducentId);
         }
     }
 }

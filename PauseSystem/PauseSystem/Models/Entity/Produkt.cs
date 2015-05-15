@@ -32,5 +32,6 @@ namespace PauseSystem.Models.Entity
         public string Url { get; set; }
         public bool Prisliste { get; set; }
         public Nullable<int> ProducentId { get; set; }
+        public virtual Producent Producent { get; set; }
     }
 }
