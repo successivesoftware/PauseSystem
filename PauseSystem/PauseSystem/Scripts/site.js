@@ -9,6 +9,9 @@
     return context[func].apply(this, args);
 }
 
+function delayExecution(code) {
+    setTimeout(code, 10);
+};
 
 var jsLiverenger = {
     deleteDelivery: function (id, jsonResult) {
@@ -34,6 +37,7 @@ var jsLiverenger = {
             responseMessage.showError();
         }
     },
+
     changeAntal: function (producktNo, targetId, mode) {
         var value = document.getElementById(targetId).innerHTML;
         ajaxLoader.show();
@@ -43,72 +47,104 @@ var jsLiverenger = {
         })
     },
 
-    addProduct: function (item, containerId) {
+    addProduct: function (produktNr, containerId) {
+        if (isNaN(produktNr))
+            return responseMessage.showError('Something wrong.');
         ajaxLoader.show();
-        $.post('Home/AjaxAddProduct', { producktNr: item.ProducktNr }, function (html) {
+        $.post('Home/AjaxAddProduct', { produktNr: produktNr }, function (html) {
             ajaxLoader.hide();
             $("#" + containerId).before(html);
             $("#" + containerId).find('input').val('');
         })
     },
 
-    initiateAutocompleter: function () {
-        $("input[type=text][action-type=typeahead]").each(function () {
-            var $elm = $(this);
-            var funcSelect = $elm.attr("action-onselect");
-            var containerId = $elm.attr("data-container");
-            $elm.typeahead({
-                minLength:3,
-                source: function (query, process) {
-                    $.post("Home/AjaxSearchProdukt", { "q": query, "limit": 5 }, function (response) {
-                        if (response.isSuccess) {
-                            var data = response.data;
-                            if (data.length != 0) {
-                                process(data);
-                            } else {
-                                $elm.typeahead('hide');
-                            }
-                        }
-                    });
-                },
-                highlighter: function (name) { return name; },
-                items: 5,
-                highlight: true,
-                updater: function (item) {
-                    try {
-                        if (funcSelect) executeFunctionByName(funcSelect, item, containerId);
-                    }
-                    catch (e) { console.log(e); }
-                    return item.ProduktName;
-                },
-                clear: function () {
-                    $elm.val("");
+    initProduktSearchAutoCompleter: function () {
+        jsAutoCompleter.init('.search-produkt', { url: global.mapUrl('Home/AjaxGetProdukt'), displayField: 'HtmlString', selectedField: 'HtmlString', valueField: "ProduktNr", minLength: 2 }
+            , function (item, that) {
+                delayExecution(function () {
+                    that.value = "";
+                });
+                if (confirm("Are you sure you want to add this produkt?")) {
+                    jsLiverenger.addProduct(item.ProduktNr, that.getAttribute("data-container"));
                 }
-            })
-        });
+            });
     },
-
-
-    //addNewRow: function (id, tableId) {
-    //    var id = $("#hiddenProductId_" + id).val();
-    //    var antal = $("#hiddenProductAntal_" + id).value;
-    //    var varenr = $("#hiddenProductVarenr_" + id).val();
-    //    var beskrivelse = $("#hiddenProductBeskrivelse_" + id).attr("value");
-    //    var pris = $("#hiddenProductPris_" + id).value;
-    //    var sPris = $("#hiddenProductSPris_" + id).value;
-    //    var row = '<tr>'
-    //                + '<td>' + antal + '</td>'
-    //                + '<td>' + varenr + '</td>'
-    //                + '<td>' + beskrivelse + '</td>'
-    //                + '<td>' + pris + '</td>'
-    //                + '<td>' + sPris + '</td>'
-    //                + '</tr>'
-
-    //    $("#" + tableId).append(row);
-    //}
-
+    initCustomerSearchAutoCompleter: function () {
+        jsAutoCompleter.init('#KundeName', { url: global.mapUrl('Home/AjaxGetKunder'), displayField: 'DisplayName', selectedField: 'Name', valueField: "Id", minLength: 1 }
+            , function (item, that) {
+                document.getElementById("KundeId").value = parseInt(item.Id);
+            });
+    }
 }
 
-//$(document).ready(function () {
-//    jsLiverenger.initiateAutocompleter();
-//})
+
+var jsAutoCompleter = {
+    init: function (selector, options, selectCallback) {
+        new AutoCompleter().init(selector, options, selectCallback);
+    }
+}
+
+function AutoCompleter() {
+    var instance = this;
+    var selectedItem = {};
+    var _defaultOptions = {
+        url: '',
+        minLength: 1,
+        timeout: 500,
+        selectedField: undefined,
+        displayField: 'Name',
+        valueField: 'Id',
+        method: 'GET',
+        loadingClass: 'loader-small',
+        renderHtml: null,
+        readonlySelection: true,
+    };
+    this.advanceSelection = function (elm) {
+        //$(elm).after('<div class="typeahead-selected-text">' + elm.value + '</div>');
+    },
+    this.init = function (selector, options, selectCallback) {
+        //reference https://github.com/biggora/bootstrap-ajax-typeahead
+        var _options = $.extend(_defaultOptions, options);
+        if (!_options.selectedField || _options.selectedField == '')
+            _options.selectedField = _options.displayField;
+
+        $(selector).each(function () {
+            var _that = this;
+            var sourceElms = {};
+            $(_that).typeahead({
+                onSelect: function (item) {
+                    selectedItem = sourceElms[item.value];
+                    setTimeout(function () {
+                        _that.value = selectedItem[_options.selectedField];
+                        $(_that).addClass("typeahead-selected-input");
+                        if (_options.readonlySelection) instance.advanceSelection(_that);
+                    }, 10);
+                    if (selectCallback) selectCallback(selectedItem, _that);
+                },
+                ajax: {
+                    url: _options.url,
+                    timeout: _options.timeout,
+                    displayField: _options.displayField,
+                    valueField: _options.valueField,
+                    triggerLength: _options.minLength,
+                    method: _options.method
+                    , loadingClass: _options.loadingClass
+                    , preProcess: function (response) {
+                        if (response.isSuccess === false) {
+                            // Hide the list, there was some error
+                            return false;
+                        }
+                        var data = response.data;
+                        for (i in response.data) {
+                            sourceElms[response.data[i][_options.valueField]] = response.data[i];
+                        };
+                        return response.data;
+                    }
+                }
+            });
+        });
+    }
+    return instance;
+}
+
+//<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>

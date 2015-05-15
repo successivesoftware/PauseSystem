@@ -9,29 +9,8 @@ namespace PauseSystem.Models.Entity
 {
     public static class RepositoryExtentions
     {
-        //public static IList<CustomerDelivery> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork,
-        //    DateTime startDate, DateTime endDate, int? kundeId)
-        //{
-        //    var qLeveringsProdukt = repository.AsQuerable();
-        //    qLeveringsProdukt = qLeveringsProdukt.Where(x => x.TurLevering.Ture.Dato >= startDate && x.TurLevering.Ture.Dato <= endDate);
-        //    if (kundeId.HasValue)
-        //        qLeveringsProdukt = qLeveringsProdukt.Where(x => x.TurLevering.KundeId == kundeId.Value);
 
-        //    return qLeveringsProdukt.Take(20).Select(x => new CustomerDelivery
-        //    {
-        //        Antal = x.Antal,
-        //        VareNr = x.ProduktNr,
-        //        Beskrivelse = x.Produkt.Navn,
-        //        Pris = x.SalgsPris,
-        //        SampletPris = x.SalgsPris
-        //    }).ToList();
-
-
-
-
-        //}
-
-        public static IList<CustomerDeliveryAdresses> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork, 
+        public static IList<CustomerDeliveryAdresses> GetDeliveries(this IRepository<LeveringsProdukt> repository, UnitOfWork unitOfWork,
             DateTime startDate, DateTime endDate, int kundeId)
         {
             var finalProdukter = new List<LeveringsProdukt>();
@@ -39,10 +18,8 @@ namespace PauseSystem.Models.Entity
             startDate = startDate.Date;
             endDate = endDate.Date;
 
-            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date
-                && l.KundeId == kundeId);
-
-           var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
+            var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date && l.KundeId == kundeId);
+            var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
             var leveringDateMax = leveringMonday > startDate ? leveringMonday : startDate;
             if (qleveringer.Any())
             {
@@ -84,6 +61,7 @@ namespace PauseSystem.Models.Entity
             var produkter = finalProdukter.OrderBy(p => p.TurLevering.Ture.Dato).ThenBy(p => p.Produkt.Navn).ToList();
             foreach (var levering in produkter.Where(p => p.TurLevering.Ture.Dato.Date >= startDate.Date && p.TurLevering.Ture.Dato <= endDate.Date))
             {
+
                 if (deliveries.Any(m => m.AdressId == levering.TurLevering.AdresseId))
                 {
                     if (deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
@@ -96,116 +74,24 @@ namespace PauseSystem.Models.Entity
                             deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
                                 .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
                                 .DeliverDates.First(l => l.Date.Date == levering.TurLevering.Ture.Dato.Date)
-                                .Deliveries.Add(new CustomerDelivery()
-                                {
-                                    Number = levering.Antal,
-                                    Pris = levering.SalgsPris,
-                                    Produkt = levering.Produkt.Navn,
-                                    ProduktNumber = levering.ProduktNr,
-                                    Id = levering.Id
-
-                                });
+                                .Deliveries.Add(CustomerDelivery.CreateInstance(levering));
                         }
                         else
                         {
                             deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
                                 .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                                .DeliverDates.Add(new CustomerDeliverDates()
-                                {
-                                    DayOfWeek = System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
-                                    Date = levering.TurLevering.Ture.Dato,
-                                    DateString =
-                                        levering.TurLevering.Ture.Dato.ToShortDateString(),
-                                    Deliveries = new List<CustomerDelivery>()
-                                });
-                            deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                                .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                                .DeliverDates.First(l => l.Date.Date == levering.TurLevering.Ture.Dato.Date)
-                                .Deliveries.Add(new CustomerDelivery()
-                                {
-                                    Number = levering.Antal,
-                                    Pris = levering.SalgsPris,
-                                    Produkt = levering.Produkt.Navn,
-                                    ProduktNumber = levering.ProduktNr,
-                                    Id = levering.Id
-                                });
+                                .DeliverDates.Add(CustomerDeliverDates.CreateInstance(levering));
                         }
                     }
                     else
                     {
                         deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                            .DeliveryWeeks.Add(new CustomerDeliveryWeek()
-                            {
-                                Week = levering.TurLevering.Ture.Week,
-                                DeliverDates = new List<CustomerDeliverDates>()
-                            });
-                        deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                            .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                            .DeliverDates.Add(new CustomerDeliverDates()
-                            {
-                                DayOfWeek =
-                                    System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                        .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
-
-                                Date = levering.TurLevering.Ture.Dato,
-                                DateString =
-                                    levering.TurLevering.Ture.Dato.ToShortDateString(),
-                                Deliveries = new List<CustomerDelivery>()
-                            });
-                        deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                            .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                            .DeliverDates.First(l => l.Date.Date == levering.TurLevering.Ture.Dato.Date)
-                            .Deliveries.Add(new CustomerDelivery()
-                            {
-                                Number = levering.Antal,
-                                Pris = levering.SalgsPris,
-                                Produkt = levering.Produkt.Navn,
-                                ProduktNumber = levering.ProduktNr,
-                                Id = levering.Id
-                            });
+                            .DeliveryWeeks.Add(CustomerDeliveryWeek.CreateInstance(levering));
                     }
                 }
                 else
                 {
-                    deliveries.Add(new CustomerDeliveryAdresses()
-                    {
-                        Adress = levering.TurLevering.Adresser.Adresse + " " + levering.TurLevering.Adresser.Etage,
-                        AdressId = levering.TurLevering.AdresseId,
-                        City = levering.TurLevering.Adresser.City,
-                        PostalCode = levering.TurLevering.Adresser.PostNr,
-                        DeliveryWeeks = new List<CustomerDeliveryWeek>()
-                    });
-                    deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                        .DeliveryWeeks.Add(new CustomerDeliveryWeek()
-                        {
-                            Week = levering.TurLevering.Ture.Week,
-                            DeliverDates = new List<CustomerDeliverDates>()
-                        });
-                    deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                        .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                        .DeliverDates.Add(new CustomerDeliverDates()
-                        {
-                            DayOfWeek =
-                                System.Globalization.CultureInfo.GetCultureInfo("da-DK")
-                                    .DateTimeFormat.GetDayName(levering.TurLevering.Ture.Dato.DayOfWeek).ToSentenceCase(),
-                            Date = levering.TurLevering.Ture.Dato,
-                            DateString =
-                                levering.TurLevering.Ture.Dato.ToShortDateString(),
-                            Deliveries = new List<CustomerDelivery>()
-                        });
-                    deliveries.First(m => m.AdressId == levering.TurLevering.AdresseId)
-                        .DeliveryWeeks.First(dw => dw.Week == levering.TurLevering.Ture.Week)
-                        .DeliverDates.First(l => l.Date.Date == levering.TurLevering.Ture.Dato.Date)
-                        .Deliveries.Add(new CustomerDelivery()
-                        {
-                            Number = levering.Antal,
-                            Pris = levering.SalgsPris,
-                            Produkt = levering.Produkt.Navn,
-                            ProduktNumber = levering.ProduktNr,
-                            Id = levering.Id
-
-                        });
+                    deliveries.Add(CustomerDeliveryAdresses.CreateInstance(levering));
                 }
             }
             return deliveries.Distinct().ToList();
@@ -220,6 +106,8 @@ namespace PauseSystem.Models.Entity
             //priser.Load();
             foreach (var abonnement in abonnementer)
             {
+                if (abonnement.AbonnementRute == null)
+                    continue;
                 DateTime leveringsDato = TimeTool.GetDate(year, week, (int)abonnement.AbonnementRute.Ugedag);
 
                 if (abonnement.AbonnementProdukts.Any(ap => ap.IsActive(leveringsDato) && !ap.OnPause(leveringsDato))
@@ -303,17 +191,17 @@ namespace PauseSystem.Models.Entity
                                 //if (priser.Any(pc => pc.CustomerId == levering.KundeId && pc.ProductNr == abonnementProdukt.ProduktNr
                                 //    && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato))
                                 //{
-                                    foreach (var pcsp in priser.Where(pc => pc.CustomerId == levering.KundeId && pc.ProductNr ==
-                                        abonnementProdukt.ProduktNr && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato)
-                                        .OrderByDescending(p => p.Antal))
+                                foreach (var pcsp in priser.Where(pc => pc.CustomerId == levering.KundeId && pc.ProductNr ==
+                                    abonnementProdukt.ProduktNr && pc.FromDate <= leveringsDato && pc.ToDate >= leveringsDato)
+                                    .OrderByDescending(p => p.Antal))
+                                {
+                                    if (abonnementProdukt.Antal >= pcsp.Antal)
                                     {
-                                        if (abonnementProdukt.Antal >= pcsp.Antal)
-                                        {
-                                            lp.SalgsPris = pcsp.Pris;
-                                            break;
-                                        }
+                                        lp.SalgsPris = pcsp.Pris;
+                                        break;
                                     }
-                               // }
+                                }
+                                // }
                                 if (levering.LeveringProdukts.All(p => p.Produkt.ProduktNr != lp.Produkt.ProduktNr))
                                     levering.LeveringProdukts.Add(lp);
                                 else

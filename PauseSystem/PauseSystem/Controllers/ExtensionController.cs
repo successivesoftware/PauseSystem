@@ -28,6 +28,16 @@ namespace PauseSystem.Controllers
             };
         }
 
+        public static System.Web.Mvc.JsonResult ToJsonError(this System.Web.Mvc.Controller controller, string message)
+        {
+            return ToJsonResult(controller, data: String.Empty, message: null, jsonResultType: JsonResultTypes.Error);
+        }
+
+        public static string GetFirstError(this ModelState modelState)
+        {
+            return modelState.Errors.Select(x => x.ErrorMessage).FirstOrDefault();
+        }
+
         [Serializable]
         public class JsonResultData
         {
