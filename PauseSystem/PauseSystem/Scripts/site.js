@@ -14,6 +14,7 @@ function delayExecution(code) {
 };
 
 var jsLiverenger = {
+    // delete
     deleteDelivery: function (id, jsonResult) {
         var result = global.parseJsonResult(jsonResult);
         if (result.isSuccess) {
