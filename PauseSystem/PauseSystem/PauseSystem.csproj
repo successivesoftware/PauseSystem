@@ -154,7 +154,6 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\BundleConfig.cs" />
-    <Compile Include="Helpers\CustomFilters.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
@@ -166,11 +165,13 @@
     </Compile>
     <Compile Include="Helpers\CustomDateTime.cs" />
     <Compile Include="Helpers\ExtensionMethods.cs" />
+    <Compile Include="Helpers\HtmlHelper.cs" />
     <Compile Include="Helpers\MessageHelper.cs" />
-    <Compile Include="Helpers\PauseHelper.cs" />
+    <Compile Include="Helpers\UIHelper.cs" />
     <Compile Include="Helpers\PauseSecurity.cs" />
     <Compile Include="Helpers\TimeTool.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\AutoCompleter.cs" />
     <Compile Include="Models\CustomerDelivery.cs" />
     <Compile Include="Models\Entity\AbbonnementProduktPause.cs" />
     <Compile Include="Models\Entity\AbbPauser.cs" />
@@ -196,6 +197,7 @@
     <Compile Include="Models\Entity\ExternFragtChauffør.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Extensions\AbonnementExtensions.cs" />
+    <Compile Include="Models\Extensions\ProductExtensions.cs" />
     <Compile Include="Models\FrugtContext.cs" />
     <Compile Include="Models\Entity\Grossister.cs" />
     <Compile Include="Models\Entity\Grøntkasse.cs" />
@@ -300,6 +302,7 @@
     <Compile Include="Models\Entity\UgeStatistik.cs" />
     <Compile Include="Models\Entity\VersionLog.cs" />
     <Compile Include="Models\Entity\Week.cs" />
+    <Compile Include="Models\ModelClasses.cs" />
     <Compile Include="Models\Repository.cs" />
     <Compile Include="Models\Extensions\RepositoryExtentions.cs" />
     <Compile Include="Models\TEntity.cs" />
@@ -320,15 +323,18 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Images\firmafrugt.gif" />
+    <Content Include="Images\img1.jpg" />
+    <Content Include="Images\img2.jpg" />
     <Content Include="Scripts\bootstrap-datepicker.js" />
     <Content Include="Scripts\bootstrap-datepicker.min.js" />
+    <Content Include="Scripts\bootstrap-typeahead.min.js" />
     <Content Include="Scripts\bootstrap.js" />
     <Content Include="Scripts\bootstrap.min.js" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.woff" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.ttf" />
     <Content Include="Content\fonts\glyphicons-halflings-regular.eot" />
-    <None Include="Properties\PublishProfiles\LocalIIS.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
+    <Content Include="Scripts\bootstrap3-typeahead.min.js" />
     <Content Include="Scripts\global.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
@@ -360,11 +366,14 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Account\Login.cshtml" />
     <Content Include="Views\Home\About.cshtml" />
-    <Content Include="Views\Home\_UCLiverings.cshtml" />
-    <Content Include="Views\Home\Livering.cshtml" />
+    <Content Include="Views\Home\_UCLeverancer.cshtml" />
+    <Content Include="Views\Home\Levering.cshtml" />
+    <Content Include="Views\Home\_UCDelivery.cshtml" />
+    <Content Include="Views\Home\_UCLeveringFilters.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Properties\PublishProfiles\" />
     <Folder Include="Views\Extension\" />
   </ItemGroup>
   <ItemGroup>
@@ -392,7 +401,7 @@
           <AutoAssignPort>True</AutoAssignPort>
           <DevelopmentServerPort>6833</DevelopmentServerPort>
           <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:1344/</IISUrl>
+          <IISUrl>http://localhost:1345/</IISUrl>
           <NTLMAuthentication>False</NTLMAuthentication>
           <UseCustomServer>False</UseCustomServer>
           <CustomServerUrl>

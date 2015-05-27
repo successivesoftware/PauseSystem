@@ -30,17 +30,16 @@ namespace PauseSystem.Controllers
         //
         // GET: /Account/Login
         [AllowAnonymous]
+        [HttpGet]
         public ActionResult Login(string returnUrl)
         {
             ViewBag.ReturnUrl = returnUrl;
-
             if (Request.QueryString.HasKeys() && Request.QueryString["kundenr"] != null && Request.QueryString["guid"] != null
                 && SignIn(Request["kundenr"], Request["guid"], false)
                 )
             {
                 return RedirectToLocal(returnUrl);
             }
-
             return View();
         }
 
@@ -49,6 +48,7 @@ namespace PauseSystem.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
+
         public ActionResult Login(LoginViewModel model, string returnUrl)
         {
             if (!ModelState.IsValid)
@@ -59,6 +59,7 @@ namespace PauseSystem.Controllers
             {
               return RedirectToLocal(returnUrl);
             }
+            ModelState.AddModelError("Username", "Invalid username and password combination.");
             return View(model);
 
         }

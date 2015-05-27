@@ -57,6 +57,7 @@ namespace PauseSystem.Models.Mapping
             this.Property(t => t.Url).HasColumnName("Url");
             this.Property(t => t.Prisliste).HasColumnName("Prisliste");
             this.Property(t => t.ProducentId).HasColumnName("ProducentId");
+            this.HasOptional(p => p.Producent).WithMany(p=>p.Produkts).HasForeignKey(p => p.ProducentId);
         }
     }
 }

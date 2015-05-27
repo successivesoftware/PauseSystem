@@ -1,22 +1,9 @@
-﻿/*body {
-    padding-top: 50px;
-    padding-bottom: 20px;
-}*/
-
-/* Set padding to keep content from hitting the edges */
-/*.body-content {
-    padding-left: 15px;
-    padding-right: 15px;
-}*/
-
-/* Override the default bootstrap behavior where horizontal description lists 
-   will truncate terms that are too long to fit in the left column 
-*/
-
+﻿
 /* Styles for validation helpers
 -----------------------------------------------------------*/
 .field-validation-error {
     color: #f00;
+    font-size: 12px;
 }
 
 .field-validation-valid {
@@ -47,19 +34,16 @@ form label.required:after {
     white-space: normal;
 }
 
-
 .norecord {
     width: 100%;
     text-align: center;
     color: #c09853;
-    /*background-color: #fcf8e3;*/
     border-color: #fbeed5;
     padding: 15px;
     margin-bottom: 20px;
     border: 1px solid transparent;
     border-radius: 4px;
 }
-
 
 #bgLoader {
     position: fixed;
@@ -72,33 +56,190 @@ form label.required:after {
     text-align: center;
 }
 
-#bgLoader .fade {
-    display: block;
-    background: #000;
-    position: absolute;
-    opacity: 0.3;
-    width: 100%;
-    height: 100%;
-    z-index:999;
-}
+    #bgLoader .fade {
+        display: block;
+        background: #000;
+        position: absolute;
+        opacity: 0.3;
+        width: 100%;
+        height: 100%;
+        z-index: 999;
+    }
 
-#bgLoader .loader {
-    position:absolute;
-    left: 45%;
-    top: 40%;
-    padding: 10px 30px;
-    background: #ffffff;
-    z-index:9999;
-}
+    #bgLoader .loader {
+        position: absolute;
+        left: 45%;
+        top: 40%;
+        padding: 10px 30px;
+        background: #ffffff;
+        z-index: 9999;
+    }
 
 #responseAlertBox {
-    display:none;
+    display: none;
+    text-align: center;
+    padding: 10px 40px 10px 25px;
 }
 
-/*#dvLoader img {
-        top: 40%;
-        position: fixed;
-        z-index:9999;
-    }*/
+td.action {
+    text-align: center;
+}
 
-/* Set width on the form input elements since they're 100% wide by default */
+.ml0 {
+    margin-left: 0 !important;
+}
+
+.ml5 {
+    margin-left: 5px !important;
+}
+
+.ml10 {
+    margin-left: 10px !important;
+}
+
+.ml20 {
+    margin-left: 20px !important;
+}
+
+.mr0 {
+    margin-right: 0 !important;
+}
+
+.mr5 {
+    margin-right: 5px !important;
+}
+
+.mr10 {
+    margin-right: 10px !important;
+}
+
+.mr20 {
+    margin-right: 20px !important;
+}
+
+.mb0 {
+    margin-bottom: 0 !important;
+}
+
+.mb5 {
+    margin-bottom: 5px !important;
+}
+
+.mb10 {
+    margin-bottom: 10px !important;
+}
+
+.mb20 {
+    margin-bottom: 20px !important;
+}
+
+.mt0 {
+    margin-top: 0 !important;
+}
+
+.mt5 {
+    margin-top: 5px !important;
+}
+
+.mt10 {
+    margin-top: 10px !important;
+}
+
+.mt20 {
+    margin-top: 20px !important;
+}
+
+.pl0 {
+    padding-left: 0 !important;
+}
+
+.pl5 {
+    padding-left: 5px !important;
+}
+
+.pl10 {
+    padding-left: 10px !important;
+}
+
+.pl20 {
+    padding-left: 20px !important;
+}
+
+.pr0 {
+    padding-right: 0 !important;
+}
+
+.pr5 {
+    padding-right: 5px !important;
+}
+
+.pr10 {
+    padding-right: 10px !important;
+}
+
+.pr20 {
+    padding-right: 20px !important;
+}
+
+.pt0 {
+    padding-top: 0 !important;
+}
+
+.pt5 {
+    padding-top: 5px !important;
+}
+
+.pt10 {
+    padding-top: 10px !important;
+}
+
+.pt20 {
+    padding-top: 20px !important;
+}
+
+.pb0 {
+    padding-bottom: 0 !important;
+}
+
+.pb5 {
+    padding-bottom: 5px !important;
+}
+
+.pb10 {
+    padding-bottom: 10px !important;
+}
+
+.pb20 {
+    padding-bottom: 20px !important;
+}
+
+.loader-small {
+    background: url('Images/loader-small.gif') no-repeat 99% 50%;
+}
+
+.typeahead-container {
+    position: relative;
+}
+
+.typeahead-selected-input {
+    position: absolute;
+    left: 0px;
+}
+
+.typeahead-selected-text {
+    position: absolute;
+    overflow: hidden;
+    margin: 0;
+    padding: 0 5px;
+    width: 100%;
+    height: auto !important;
+    height: 1%;
+    border: 1px solid #aaa;
+    background-color: #fff;
+    background-image: -webkit-gradient(linear, 50% 0%, 50% 100%, color-stop(1%, #eeeeee), color-stop(15%, #ffffff));
+    background-image: -webkit-linear-gradient(#eeeeee 1%, #ffffff 15%);
+    background-image: -moz-linear-gradient(#eeeeee 1%, #ffffff 15%);
+    background-image: -o-linear-gradient(#eeeeee 1%, #ffffff 15%);
+    background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
+    cursor: text;
+}

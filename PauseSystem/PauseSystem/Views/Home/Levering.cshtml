@@ -1,0 +1,36 @@
+﻿@model PauseSystem.Models.LeveringModel
+@{
+    ViewBag.Title = "Pause System";
+}
+
+
+<div class="row">
+    Hej @(PauseSecurity.GetFullName()) Du kan nu afmelde de dage hvor du ikke ønsker frugt.
+    Afmeldning gælder for alle varer som normalt leveres på den pågælende dato.
+    Ønker du stadig levering af frugt, men i mindre mængder, så kontakt os venligst på 32 200 777 eller på salg@firmafrugt.com
+    <br /><br />
+    Når du logger ud, vil du modtage en opdateret leveringsoversigt hvor du kan se din kommende leveringer.
+
+    <h4>Leveringsadresser</h4>
+
+    @{
+        Html.RenderPartial("_UCLeveringFilters");
+        <div class="clearfix"></div>
+        if (Model.KundeId == 0)
+        {
+            <p class="norecord">Vælg en kunde at se leverancer.</p>
+        }
+        else
+        {
+            Html.RenderPartial("_UCLeverancer", Model.CustomerDeliveryAdresses);
+        }
+    }
+
+</div>
+<script type="text/javascript">
+    function ready() {
+        global.initdatepicker('.date');
+        jsLiverenger.initProduktSearchAutoCompleter();
+        jsLiverenger.initCustomerSearchAutoCompleter();
+    }
+</script>

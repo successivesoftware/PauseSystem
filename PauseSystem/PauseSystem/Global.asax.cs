@@ -17,5 +17,8 @@ namespace PauseSystem
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
+
+
+        
     }
 }

@@ -1,63 +1,162 @@
-﻿using PauseSystem.Helpers;
-using PauseSystem.Models;
+﻿using PauseSystem.Models;
 using PauseSystem.Models.Entity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace PauseSystem.Controllers
 {
+
     [Authorize]
     public class HomeController : Controller
     {
         UnitOfWork unitOfWork = new UnitOfWork();
-        IRepository<Produkt> produktRepository;
 
         [AllowAnonymous]
         public ActionResult Index()
         {
+
             if (PauseSecurity.IsAuthenticated)
             {
-                return View("Livering",GetDeliveries( DateTime.Now.AddMonths(-1), DateTime.Now));
+                var model = new LeveringModel() { StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(10) };
+                if (PauseSecurity.IsInRole(RoleTypes.Customer))
+                {
+                    model.KundeId = PauseSecurity.GetUserId();
+                    model.CustomerDeliveryAdresses = GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
+                }
+                return View("Levering", model);
             }
             return View();
         }
 
         [HttpPost]
-        public ActionResult Index(DateTime? startDate, DateTime? endDate)
+        public ActionResult Index(LeveringModel model)
         {
-            if (!startDate.HasValue)
-                ModelState.AddModelError("StartDate", "StartDate field is required.");
-            else if (!endDate.HasValue)
-                ModelState.AddModelError("EndDate", "StartDate field is required.");
-            else if (CustomDateTime.IsPastDate(endDate.Value))
-                ModelState.AddModelError("EndDate", "EndDate should not be past date.");
-            else if (endDate.Value < startDate.Value)
-                ModelState.AddModelError("EndDate", "EndDate should not be be less StartDate.");
+            // Change KundeId if user is customer
+            if (PauseSecurity.IsInRole(RoleTypes.Customer))
+            {
+                model.KundeId = PauseSecurity.GetUserId();
+            }
+            if (model.KundeId <= 0)
+            {
+                ModelState.AddModelError("KundeName", "Kunde eksisterer ikke.");
+            }
+            else if (model.EndDate < model.StartDate)
+            {
+                ModelState.AddModelError("EndDate", "Slutdato bør ikke være mindre Startdato.");
+            }
             if (!ModelState.IsValid)
             {
-                return View(new List<CustomerDeliveryAdresses>());
+                return View("Levering", model);
             }
-            return View(GetDeliveries(startDate.Value, endDate.Value));
+           
+            model.CustomerDeliveryAdresses =  GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
+            return View("Levering", model);
+        }
+     
+
+        #region Private Methods
+     
+        
+        private string GetProduktSearchOutputHtml(string name, double price, string icon)
+        {
+            return String.Format("<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>",
+                        icon, name, price);
         }
 
-
-        private IList<CustomerDeliveryAdresses> GetDeliveries(DateTime startDate, DateTime endDate)
+        private IList<CustomerDeliveryAdresses> GetCustomerDeliveryAdresses(int kundeId, DateTime startDate, DateTime endDate)
         {
             ViewBag.StartDate = startDate.ToDateString();
             ViewBag.EndDate = endDate.ToDateString();
-            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, PauseSecurity.GetUserId());
+            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, kundeId);
         }
 
+
+        #endregion
+
+
+        #region AjaxMethods
+
+        [HttpGet]
+        public JsonResult AjaxGetProdukt(string query)
+        {
+            var qprodukt = unitOfWork.Repository<Produkt>().AsQuerable()
+                .Where(p => p.Active == true && (p.Navn.Contains(query) || p.ProduktNr.ToString().Contains(query)))
+                .Take(10)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    Name = x.Navn,
+                    Price = x.KostPris,
+                    ProduktNr = x.ProduktNr,
+                }).ToList()
+            .Select(x => new
+            {
+                Id = x.Id,
+                Name = x.Name,
+                Price = x.Price,
+                ProduktNr = x.ProduktNr,
+                HtmlString = GetProduktSearchOutputHtml(x.Name, x.Price, "Images/img1.jpg")
+            });
+            return this.ToJsonResult(qprodukt.ToList());
+        }
+
+
+        [HttpGet]
+        [Authorize(Roles = RoleTypes.Employee)]
+        public JsonResult AjaxGetKunder(string query)
+        {
+            var qprodukt = unitOfWork.Repository<Kunde>().AsQuerable()
+                .Where(p => p.Navn.Contains(query) || p.Email.ToString().Contains(query))
+                .Take(10)
+                .Select(x => new
+                {
+                    Id = x.Id,
+                    DisplayName = x.Navn + " (" + x.Email + ")",
+                    Name = x.Navn,
+                }).ToList();
+            return this.ToJsonResult(qprodukt);
+        }
+
+
+        [HttpPost]
+        public ActionResult AjaxChangeAntalValue(int produktNumber, int value, string mode)
+        {
+            if (mode == "+")
+            {
+                value += 1;
+                // Write the code to increase Antal value
+
+            }
+            else if (value > 0)
+            {
+                value -= 1;
+                // Write the code to decrease Antal value
+            }
+            return this.Content(value.ToString());
+        }
+
+        [HttpPost]
+        public PartialViewResult AjaxAddProduct(int produktNr)
+        {
+            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == produktNr);
+            return PartialView("_UCDelivery", new CustomerDelivery
+            {
+                Number = 1,
+                ProduktNumber = produkt.ProduktNr,
+                Produkt = produkt.Navn,
+                Id = produkt.Id,
+                Pris = produkt.SalgsPris
+            });
+        }
 
         [HttpPost]
         public JsonResult AjaxDeleteDelivery(int id)
         {
             // Write the code to delete delivery here
 
-           return this.ToJsonResult(id);
+            return this.ToJsonResult(id);
         }
 
         [HttpPost]
@@ -68,45 +167,11 @@ namespace PauseSystem.Controllers
             return this.ToJsonResult(date);
         }
 
-        [HttpPost]
-        public ActionResult AjaxUpdateAntal(int produktNumber, int operation)
-        {
-            //operation = 0 to decrease & 1 to increase
-            return this.ToJsonResult(produktNumber);
-        }
-        
-        [HttpPost]
-        public JsonResult GetProductName(string filterKey, int limit = 10)
-        {
-            produktRepository = unitOfWork.Repository<Produkt>();
-            return Json(produktRepository.AsQuerable().Where(x => x.Navn.ToLower().Contains(filterKey.ToLower())).Select(x => new
-            {
-                img = "/Content/Images/loading.gif",
-                price = x.KostPris,
-                text = x.Navn,
-                value = x.Id,
-                varenr = x.ProduktNr,
-                sprice = x.SalgsPris
-            }).Take(limit).ToArray(), JsonRequestBehavior.AllowGet);
-        }
+       
 
-        [HttpPost]
-        public ActionResult AjaxAddNewProductRow(int id)
-        {
-            return this.ToJsonResult(id);
-        }
+        #endregion
 
-        //[Authorize(Roles = RoleTypes.Customer)]
-        //public ActionResult About()
-        //{
-        //    ViewBag.Message = "Your application description page.";
-        //    return View();
-        //}
 
-        //public ActionResult Contact()
-        //{
-        //    ViewBag.Message = "Your contact page.";
-        //    return View();
-        //}
     }
+
 }
