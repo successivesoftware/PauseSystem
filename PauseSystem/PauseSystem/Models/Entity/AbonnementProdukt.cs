@@ -20,7 +20,7 @@ namespace PauseSystem.Models.Entity
         public virtual ICollection<AbonnementProduktChange> AbonnementProduktChanges { get; set; }
 
         public virtual Produkt Produkt { get; set; }
-
+        public virtual Abonnementer Abonnement { get; set; }
 
         #region Databinding
 

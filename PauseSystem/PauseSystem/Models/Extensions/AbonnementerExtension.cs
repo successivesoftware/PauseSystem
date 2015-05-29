@@ -28,7 +28,7 @@ namespace PauseSystem.Models.Extensions
                 {
                     var levering = new TurLevering()
                     {
-                        Adresser = abonnement.LeveringsAdresser,
+                        Adresser = abonnement.LeveringsAdresse,
                         AdresseId = abonnement.LeveringsAdresseId,
                         Zindex = abonnement.RuteIndex,
                         Kunde = abonnement.Kunde,

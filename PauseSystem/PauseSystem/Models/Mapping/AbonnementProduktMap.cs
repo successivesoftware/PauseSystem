@@ -23,6 +23,7 @@ namespace PauseSystem.Models.Mapping
             this.Property(t => t.Ophør).HasColumnName("Ophør");
             this.Property(t => t.PrintLabel).HasColumnName("PrintLabel");
             this.Property(t => t.CreatedDate).HasColumnName("CreatedDate");
+            this.HasRequired(p => p.Abonnement).WithMany().HasForeignKey(p => p.AbonnementId);
         }
     }
 }

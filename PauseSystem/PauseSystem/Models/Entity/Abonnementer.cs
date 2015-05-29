@@ -29,7 +29,7 @@ namespace PauseSystem.Models.Entity
         public virtual ICollection<AbonnementProdukt> AbonnementProdukts { get; set; }
         public virtual ICollection<AbonnementChange> AbonnementChanges { get; set; }
 
-        public virtual Adresser LeveringsAdresser { get; set; }
+        public virtual Adresser LeveringsAdresse { get; set; }
         public virtual Kunde Kunde { get; set; }
 
 

@@ -34,7 +34,7 @@ namespace PauseSystem.Models.Mapping
             this.Property(t => t.PrintPakkeDato).HasColumnName("PrintPakkeDato");
 
             this.HasRequired(t => t.AbonnementRute).WithMany().HasForeignKey(x => x.RuteNr);
-            this.HasRequired(t => t.LeveringsAdresser).WithMany().HasForeignKey(x => x.LeveringsAdresseId);
+            this.HasRequired(t => t.LeveringsAdresse).WithMany().HasForeignKey(x => x.LeveringsAdresseId);
             this.HasRequired(t => t.Kunde).WithMany().HasForeignKey(x => x.KundeId);
             this.HasMany(t => t.AbonnementProdukts).WithOptional().HasForeignKey(x => x.AbonnementId);
             this.HasMany(t => t.AbonnementChanges).WithOptional().HasForeignKey(x => x.AbonnementId);

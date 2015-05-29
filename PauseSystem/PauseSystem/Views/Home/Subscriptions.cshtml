@@ -49,7 +49,7 @@ else
                     </tr>
 
                 <!-- Then Group by Day of Week  -->
-                    foreach (var dow in gba.SelectMany(x => x.AbonnementProdukts).GroupBy(x => x.SlutDato.DayOfWeek).OrderBy(x => x.Key))
+                    foreach (var dow in gba.SelectMany(x => x.AbonnementProdukts).GroupBy(x => x.Abonnement.Ugedag).OrderBy(x => x.Key))
                     {
                         <tr>
                             <td colspan="6" style="color:red;">
