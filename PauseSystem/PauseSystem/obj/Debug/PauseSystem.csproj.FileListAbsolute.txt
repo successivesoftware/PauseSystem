@@ -162,3 +162,4 @@ E:\PROJECTS\GIT\PauseSystem\PauseSystem\PauseSystem\bin\Microsoft.Owin.Security.
 E:\PROJECTS\GIT\PauseSystem\PauseSystem\PauseSystem\bin\Microsoft.Owin.Security.MicrosoftAccount.xml
 E:\PROJECTS\GIT\PauseSystem\PauseSystem\PauseSystem\obj\Debug\PauseSystem.dll
 E:\PROJECTS\GIT\PauseSystem\PauseSystem\PauseSystem\obj\Debug\PauseSystem.pdb
+E:\PROJECTS\GIT\PauseSystem\PauseSystem\PauseSystem\obj\Debug\PauseSystem.csprojResolveAssemblyReference.cache

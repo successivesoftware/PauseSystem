@@ -1,0 +1,9 @@
+﻿<div class="typeahead-container">
+    @Html.TextBox("KundeName", Request.Params["KundeName"], htmlAttributes: new { AutoComplete = "Off", @class = "form-control typeahead", placeholder = "Search Kunde", format = "MM" })
+</div>
+@Html.Hidden("KundeId")
+<script type="text/javascript">
+    $(document).ready(function () {
+        jsLiverenger.initCustomerSearchAutoCompleter();
+    })
+</script>

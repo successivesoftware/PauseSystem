@@ -1,5 +1,6 @@
 ﻿using PauseSystem.Models;
 using PauseSystem.Models.Entity;
+using PauseSystem.Models.Extensions;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,6 +13,15 @@ namespace PauseSystem.Controllers
     public class HomeController : Controller
     {
         UnitOfWork unitOfWork = new UnitOfWork();
+        IRepository<LeveringsProdukt> LeveringProduktRepository = null;
+        IRepository<Abonnementer> AbonnementerRepository = null;
+
+        public HomeController()
+        {
+            LeveringProduktRepository = unitOfWork.Repository<LeveringsProdukt>();
+            AbonnementerRepository = unitOfWork.Repository<Abonnementer>();
+        }
+
 
         [AllowAnonymous]
         public ActionResult Index()
@@ -54,11 +64,20 @@ namespace PauseSystem.Controllers
             model.CustomerDeliveryAdresses =  GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
             return View("Levering", model);
         }
-     
+
+
+        public ActionResult Subscriptions(int? kundeId)
+        {
+            if(PauseSecurity.IsInRole(RoleTypes.Customer))
+                kundeId = PauseSecurity.GetUserId(); 
+            if(kundeId.HasValue)
+                return View(GetCustomerSubscriptions(kundeId.Value));
+            else
+                return View(new List<Abonnementer>());
+        }
 
         #region Private Methods
      
-        
         private string GetProduktSearchOutputHtml(string name, double price, string icon)
         {
             return String.Format("<div><img src='{0}' style='max-height:50px;' /> <strong> {1} </strong> <label class='label label-warning' style='margin:left:10px;'> {2} <label> </div>",
@@ -69,7 +88,18 @@ namespace PauseSystem.Controllers
         {
             ViewBag.StartDate = startDate.ToDateString();
             ViewBag.EndDate = endDate.ToDateString();
-            return unitOfWork.Repository<LeveringsProdukt>().GetDeliveries(unitOfWork, startDate, endDate, kundeId);
+            return LeveringProduktRepository.GetDeliveries(unitOfWork, startDate, endDate, kundeId);
+        }
+
+
+        /// <summary>
+        /// returns customer future subscriptions
+        /// </summary>
+        /// <param name="kundeId"></param>
+        /// <returns></returns>
+        private IList<Abonnementer> GetCustomerSubscriptions(int kundeId)
+        {
+            return AbonnementerRepository.AsQuerable().Where(t => t.Kunde.Id == kundeId).ToList();
         }
 
 
@@ -171,6 +201,12 @@ namespace PauseSystem.Controllers
 
         #endregion
 
+
+        protected override void Dispose(bool disposing)
+        {
+            unitOfWork.Dispose();
+            base.Dispose(disposing);
+        }
 
     }
 

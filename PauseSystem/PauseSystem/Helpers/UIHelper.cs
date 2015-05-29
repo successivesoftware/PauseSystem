@@ -15,7 +15,7 @@ namespace PauseSystem.Helpers
         {
             get
             {
-                return (_TextInfo == null ? (_TextInfo = new System.Globalization.CultureInfo("en-us", false).TextInfo) : _TextInfo);
+                return (_TextInfo == null ? (_TextInfo = new System.Globalization.CultureInfo(AppSettings.CultureName, false).TextInfo) : _TextInfo);
             }
         }
 

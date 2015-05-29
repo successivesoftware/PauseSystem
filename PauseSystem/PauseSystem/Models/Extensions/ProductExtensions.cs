@@ -35,6 +35,5 @@ namespace PauseSystem.Models.Extensions
 
         }
 
-
     }
 }

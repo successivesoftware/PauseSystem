@@ -243,3 +243,22 @@ td.action {
     background-image: linear-gradient(#eeeeee 1%, #ffffff 15%);
     cursor: text;
 }
+
+
+
+
+.table-primary table { border-top-color: #23638c !important; }
+.table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+    border-color: #e4e4e4;
+}
+.table-bordered, .table-bordered > tbody > tr > td, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > td, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > thead > tr > th {
+    border: 1px solid #e4e4e4;
+}
+.table-primary table {border-top-color: #23638c !important;}
+.table-primary thead, .table-primary thead tr, .table-primary thead th, .table-primary .table-header {
+    border-color: #23638c !important;
+    color: #ffffff;
+}
+.table-primary thead tr, .table-primary thead th {
+    background: #2175ac;
+}

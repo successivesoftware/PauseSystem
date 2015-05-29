@@ -6,6 +6,7 @@ using System.Web;
 
 namespace PauseSystem.Models
 {
+
     public class LeveringModel
     {
         public LeveringModel()
@@ -27,4 +28,5 @@ namespace PauseSystem.Models
 
         public IList<CustomerDeliveryAdresses> CustomerDeliveryAdresses { get; set; }
     }
+
 }

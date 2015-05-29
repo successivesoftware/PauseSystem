@@ -1,4 +1,5 @@
-﻿using System;
+﻿using PauseSystem.Helpers;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
@@ -68,7 +69,6 @@ namespace PauseSystem
             return ParseToStringFormat(dateTime, CustomDateTimeFormats.DefaultDate);
         }
 
-
        
         /// <summary>
         /// convert datetime to given string format. if datetime is null then returns empty string.
@@ -78,6 +78,16 @@ namespace PauseSystem
         {
             return dateTime.HasValue ? ParseToStringFormat(dateTime.Value, format) : String.Empty;
         }
+
+        /// <summary>
+        /// convert datetime to given string format.
+        /// </summary>
+        /// <returns>string format</returns>
+        public static string ToString(this DateTime dateTime, CustomDateTimeFormats format)
+        {
+            return ParseToStringFormat(dateTime, format);
+        }
+
 
         /// <summary>
         /// returns Date of upcoming monday.
@@ -91,6 +101,16 @@ namespace PauseSystem
             return date;
         }
 
+
+        /// <summary>
+        /// convert dayofweek to current culture.
+        /// </summary>
+        /// <param name="date"></param>
+        /// <returns></returns>
+        public static string ToCurrentCulture(this DayOfWeek dayOfWeek)
+        {
+            return GetCulture().DateTimeFormat.GetDayName(dayOfWeek).ToSentenceCase();
+        }
 
         #endregion
 
