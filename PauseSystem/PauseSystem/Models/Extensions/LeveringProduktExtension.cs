@@ -36,7 +36,7 @@ namespace PauseSystem.Models.Extensions
 
             if (maxDate.Date < endDate.Date)
             {
-                var abonnementer = unitOfWork.Repository<Abonnementer>().AsQuerable().Where(t => t.Kunde.Id == kundeId);
+                List<Abonnementer> abonnementer = unitOfWork.Repository<Abonnementer>().AsQuerable().Where(t => t.Kunde.Id == kundeId).ToList();
                 foreach (var tmpway in TimeTool.GetWeekAndYears(maxDate, endDate))
                 {
                     var ableveringer = abonnementer.GetLeveringerForService(tmpway.Year, tmpway.Week, unitOfWork.Repository<ProductCustomerSpecialPrice>().AsQuerable());

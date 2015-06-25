@@ -6,7 +6,7 @@ namespace PauseSystem.Models.Entity
     public partial class Adresser 
     {
         public int AdresseId { get; set; }
-        public Nullable<int> KundeNr { get; set; }
+        public int KundeNr { get; set; }
         public string Adresse { get; set; }
         public string PostNr { get; set; }
         public string City { get; set; }
@@ -17,5 +17,7 @@ namespace PauseSystem.Models.Entity
         public Nullable<System.DateTime> CommentVisibleTill { get; set; }
         public string Etage { get; set; }
         public Nullable<int> KundeId { get; set; }
+        public virtual Kunde LeveringsKunde { get; set; }
+       
     }
 }

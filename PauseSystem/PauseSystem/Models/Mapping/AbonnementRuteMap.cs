@@ -8,27 +8,27 @@ namespace PauseSystem.Models.Mapping
         public AbonnementRuteMap()
         {
             // Primary Key
-            this.HasKey(t => t.Uid);
+            HasKey(t => t.RuteId);
+            Property(t => t.Id).HasColumnName("Uid").HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity).
+                IsRequired();
+            Property(t => t.RuteId).HasColumnName("RuteId");
+            Property(t => t.Ugedag).HasColumnName("DayOfWeek").HasColumnType("int");
+            Property(t => t.ChaufførId).HasColumnName("Chauffør");
+            Property(t => t.StartAdresseId).HasColumnName("StartAdresse");
+            Property(t => t.EndAdresseId).HasColumnName("EndAdresse");
+            Property(t => t.Index).HasColumnName("ABIndex");
+            Property(t => t.Navn).HasMaxLength(500).HasColumnName("Name");
+            Property(t => t.Printes).HasColumnName("Printes");
+            Property(t => t.BilId).HasColumnName("Bil");
+            Property(t => t.AddToRoute).HasColumnName("AddToRoute");
+            Property(t => t.Ophørt).HasColumnName("Ophørt");
+        
+            HasRequired(t => t.EndAdresse).WithMany().HasForeignKey(t => t.EndAdresseId);
+            HasRequired(t => t.StartAdresse).WithMany().HasForeignKey(t => t.StartAdresseId);
+            HasRequired(t => t.Chauffør).WithMany().HasForeignKey(t => t.ChaufførId);
+            HasMany(t => t.Abonnementer).WithRequired(t => t.AbonnementRute).HasForeignKey(t => t.RuteNr);
 
-            // Properties
-            this.Property(t => t.Name)
-                .HasMaxLength(500);
-
-            // Table & Column Mappings
-            this.ToTable("AbonnementRute");
-            this.Property(t => t.RuteId).HasColumnName("RuteId");
-            this.Property(t => t.Ugedag).HasColumnName("DayOfWeek");
-            this.Property(t => t.Chauffør).HasColumnName("Chauffør");
-            this.Property(t => t.StartAdresse).HasColumnName("StartAdresse");
-            this.Property(t => t.AbIndex).HasColumnName("AbIndex");
-            this.Property(t => t.StartTid).HasColumnName("StartTid");
-            this.Property(t => t.Name).HasColumnName("Name");
-            this.Property(t => t.Printes).HasColumnName("Printes");
-            this.Property(t => t.Uid).HasColumnName("Uid");
-            this.Property(t => t.EndAdresse).HasColumnName("EndAdresse");
-            this.Property(t => t.Bil).HasColumnName("Bil");
-            this.Property(t => t.AddToRoute).HasColumnName("AddToRoute");
-            this.Property(t => t.Ophørt).HasColumnName("Ophørt");
+            ToTable("AbonnementRute");
         }
     }
 }
