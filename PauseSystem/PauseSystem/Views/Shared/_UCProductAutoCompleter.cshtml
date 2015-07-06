@@ -1,0 +1,10 @@
+﻿<div class="typeahead-container">
+    @Html.TextBox("SearchProdukt","", htmlAttributes: new { AutoComplete = "Off", @class = "form-control typeahead search-produkt", placeholder = "Product Name" })
+</div>
+@Html.Hidden("ProduktNr")
+<script type="text/javascript">
+    $(document).ready(function () {
+        jsAbonnementer.initProduktSearchAutoCompleter();
+    })
+</script>
+

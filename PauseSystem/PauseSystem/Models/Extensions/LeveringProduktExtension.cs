@@ -19,7 +19,9 @@ namespace PauseSystem.Models.Extensions
 
             var qleveringer = unitOfWork.Repository<TurLevering>().AsQuerable().Where(l => l.Ture.Dato >= startDate.Date && l.Ture.Dato <= endDate.Date && l.KundeId == kundeId);
             var leveringMonday = unitOfWork.Repository<TurLevering>().AsQuerable().Max(k => k.Ture.Dato).GetNextMonday().Date;
+           
             var leveringDateMax = leveringMonday > startDate ? leveringMonday : startDate;
+            
             if (qleveringer.Any())
             {
                 if (qleveringer.Any(l => l.Ture.Dato > leveringDateMax))
@@ -29,6 +31,7 @@ namespace PauseSystem.Models.Extensions
             if (qleveringer.Any(l => l.Ture.Dato > leveringDateMax))
                 leveringDateMax = qleveringer.Max(l => l.Ture.Dato);
 
+           
             var maxDate = TimeTool.GetDate(DateTime.Now.Year, TimeTool.GetWeekNumber(leveringDateMax), (int)DayOfWeek.Monday).Date;
             maxDate = maxDate > startDate ? maxDate : startDate;
             if (leveringDateMax > maxDate.Date)
@@ -54,6 +57,7 @@ namespace PauseSystem.Models.Extensions
                     });
 
                     finalProdukter.AddRange(ableveringer.SelectMany(l => l.LeveringProdukts));
+                    
                 }
             }
 

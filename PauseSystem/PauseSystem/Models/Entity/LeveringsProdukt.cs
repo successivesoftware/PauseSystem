@@ -5,7 +5,7 @@ namespace PauseSystem.Models.Entity
 {
     public partial class LeveringsProdukt : BaseEntity
     {
-        
+        public int Id { get; set; }
         public int LeveringsId { get; set; }
         public int ProduktNr { get; set; }
         public double SalgsPris { get; set; }

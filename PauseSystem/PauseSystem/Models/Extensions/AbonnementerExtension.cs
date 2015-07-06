@@ -31,10 +31,10 @@ namespace PauseSystem.Models.Extensions
                         Adresser = abonnement.LeveringsAdresse,
                         AdresseId = abonnement.LeveringsAdresseId,
                         Zindex = abonnement.RuteIndex,
-                        Kunde = abonnement.Kunde,
+                        //Kunde = abonnement.Kunde,
                         KundeId = abonnement.KundeId,
                         LeveringsTid = leveringsDato.AddDays(-1),
-                        Id = abonnement.Id,
+                        AbonnementId = abonnement.Id,
                         Ture = new Ture() { Week = week, Year = year, DayOfWeek = abonnement.AbonnementRute.Ugedag, TurId = abonnement.AbonnementRute.RuteId }
                     };
 
@@ -133,8 +133,8 @@ namespace PauseSystem.Models.Extensions
         }
 
 
-      
+
     }
 
-    
+
 }

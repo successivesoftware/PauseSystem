@@ -2,11 +2,17 @@
 @{
     var item = Model;
 }
+@if (Model.Id == 0)
+{
+    return;
+}
+
+
 <tr id="@item.Id">
     <td>
-        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','+')"><i class='glyphicon glyphicon-plus'></i></a>
+        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','+', '@item.TempAbonnement', '@item.Id')"><i class='glyphicon glyphicon-plus'></i></a>
         <span id="span_@item.Id">@item.Number</span>
-        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','-')"><i class='glyphicon glyphicon-minus'></i></a>
+        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','-', '@item.TempAbonnement', '@item.Id')"><i class='glyphicon glyphicon-minus'></i></a>
     </td>
     <td>@item.ProduktNumber</td>
     <td>@item.Produkt</td>

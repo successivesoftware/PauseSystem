@@ -9,7 +9,7 @@ namespace PauseSystem.Models.Entity
         {
             LeveringProdukts = new List<LeveringsProdukt>();
         }
-        
+
         public int KundeId { get; set; }
         public int TurId { get; set; }
         public int AdresseId { get; set; }

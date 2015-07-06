@@ -1,0 +1,119 @@
+﻿@model PauseSystem.Models.Entity.PreAbonnementProdukt
+@{
+    ViewBag.Title = "PreAbonnement";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@using (Html.BeginForm("Preabonnement", "Home", FormMethod.Post))
+{
+    <div class="form-horizontal">
+        <div class="row">
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Address:</label>
+                    <div class="col-sm-6">
+                        @Html.Partial("_UCAddressAutoCompleter")
+                    </div>
+                    @Html.ValidationMessage("AddressId")
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Date:</label>
+                    <div class="col-sm-3">
+                        <div class="input-group date">
+                            @Html.TextBoxFor(x => x.StartDate, htmlAttributes: new { AutoComplete = "Off", @class = "form-control required", title = "Startdate", required = true, placeholder = "Start Date" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar pointer"></span>
+                            </span>
+                        </div>
+                        @Html.ValidationMessageFor(x => x.StartDate)
+                    </div>
+                    <div class="col-sm-3">
+                        <div class="input-group date">
+                            @Html.TextBoxFor(x => x.EndDate, htmlAttributes: new { AutoComplete = "Off", @class = "form-control", title = "EndDate", placeholder = "End Date" })
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar pointer"></span>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-8">
+                <div class="form-group">
+
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Day of Week:</label>
+                    <div class="col-sm-6">
+                        @Html.DropDownListFor(x => x.DayOfWeek, new System.Web.Mvc.SelectList(new List<SelectListItem>{
+                       new SelectListItem { Text = "Sunday", Selected=true, Value = "0"},
+                  new SelectListItem {
+                      Text = "Monday",
+                      Value = "1"
+                  }, new SelectListItem { Text = "Tuesday", Value = "2" },
+                     new SelectListItem { Text = "Wednesday", Value="3"},
+                     new SelectListItem { Text = "Thursday", Value = "4" },
+                     new SelectListItem { Text = "Friday", Value = "5" },
+                     new SelectListItem { Text = "Saturday", Value = "6"}
+                     }, "Value", "Text"
+                  ), new { @class = "form-control" })
+                       
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Product:</label>
+                    <div class="col-sm-6">
+                        @Html.Partial("_UCProductAutoCompleter")
+                    </div>
+                    @Html.ValidationMessageFor(x => x.ProduktNr)
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Antal:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.Antal, htmlAttributes: new { @class = "form-control", placeholder = "Antal"})
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Antal)
+                </div>
+            </div>
+
+            <div class="col-md-10">
+                <div class="form-group">
+                    <label class="col-sm-2 control-label">Interval:</label>
+                    <div class="col-sm-6">
+                        @Html.TextBoxFor(x => x.Interval, htmlAttributes: new { @class = "form-control", placeholder = "Interval" })
+                    </div>
+                    @Html.ValidationMessageFor(x => x.Interval)
+                </div>
+            </div>
+            <div class="col-md-10">
+                <div class="form-group">
+                    <div class="col-md-8 pull-right">
+                        <input type="submit" name="Submit" value="Submit" class="btn btn-primary" />
+                        <a href="@PauseSystem.Helpers.UIHelper.MapUrl("home/index")" class="btn btn-warning">Cancel</a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    function ready() {
+        global.initdatepicker('.date');
+    }
+</script>
+

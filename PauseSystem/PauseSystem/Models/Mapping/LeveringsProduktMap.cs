@@ -13,6 +13,7 @@ namespace PauseSystem.Models.Mapping
             // Properties
             this.Property(t => t.PrintLabel)
                 .HasMaxLength(450);
+            this.Property(t => t.Id).HasDatabaseGeneratedOption(DatabaseGeneratedOption.Identity);
 
             // Table & Column Mappings
             this.ToTable("LeveringsProdukt");

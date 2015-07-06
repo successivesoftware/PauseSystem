@@ -5,7 +5,7 @@ namespace PauseSystem.Models.Entity
 {
     public partial class Levering : BaseEntity
     {
-        
+        public int Id { get; set; }
         public int WeekNr { get; set; }
         public int Year { get; set; }
         public Nullable<System.DateTime> Date { get; set; }

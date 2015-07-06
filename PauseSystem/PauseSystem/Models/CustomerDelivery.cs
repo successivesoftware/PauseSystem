@@ -25,9 +25,19 @@ namespace PauseSystem.Models
                 PostalCode = levering.TurLevering.Adresser.PostNr,
                 DeliveryWeeks = new List<CustomerDeliveryWeek>() { CustomerDeliveryWeek.CreateInstance(levering) }
             };
-
         }
 
+        public static CustomerDeliveryAdresses CreateInstance(PreAbonnementProdukt preAbonnement)
+        {
+            return new CustomerDeliveryAdresses()
+            {
+                Adress = preAbonnement.Adresser.Adresse,
+                AdressId = preAbonnement.AddressId,
+                City = preAbonnement.Adresser.City,
+                PostalCode = preAbonnement.Adresser.PostNr,
+                DeliveryWeeks = new List<CustomerDeliveryWeek>() { CustomerDeliveryWeek.CreateInstance(preAbonnement) }
+            };
+        }
     }
 
     public class CustomerDeliveryWeek
@@ -42,6 +52,15 @@ namespace PauseSystem.Models
                  Week = levering.TurLevering.Ture.Week,
                  DeliverDates = new List<CustomerDeliverDates>() { CustomerDeliverDates.CreateInstance(levering) }
              };
+        }
+
+        public static CustomerDeliveryWeek CreateInstance(PreAbonnementProdukt preAbonnement)
+        {
+            return new CustomerDeliveryWeek()
+            {
+                Week = Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate),
+                DeliverDates = new List<CustomerDeliverDates>() { CustomerDeliverDates.CreateInstance(preAbonnement) }
+            };
         }
     }
 
@@ -62,6 +81,17 @@ namespace PauseSystem.Models
                 Deliveries = new List<CustomerDelivery> { CustomerDelivery.CreateInstance(levering) }
             };
         }
+
+        public static CustomerDeliverDates CreateInstance(PreAbonnementProdukt preAbonnement)
+        {
+            return new CustomerDeliverDates()
+            {
+                DayOfWeek = preAbonnement.DayOfWeek.ToString(),
+                Date = preAbonnement.StartDate,
+                DateString = preAbonnement.StartDate.ToShortDateString(),
+                Deliveries = new List<CustomerDelivery> { CustomerDelivery.CreateInstance(preAbonnement) }
+            };
+        }
     }
 
     public class CustomerDelivery
@@ -71,6 +101,7 @@ namespace PauseSystem.Models
         public int ProduktNumber { get; set; }
         public string Produkt { get; set; }
         public double Pris { get; set; }
+        public int TempAbonnement { get; set; }
 
         public static CustomerDelivery CreateInstance(LeveringsProdukt levering)
         {
@@ -80,7 +111,22 @@ namespace PauseSystem.Models
                 Pris = levering.SalgsPris,
                 Produkt = levering.Produkt.Navn,
                 ProduktNumber = levering.ProduktNr,
-                Id = levering.Id
+                Id = levering.Id,
+                TempAbonnement = 0
+            };
+        }
+
+        public static CustomerDelivery CreateInstance(PreAbonnementProdukt preAbonnement)
+        {
+
+            return new CustomerDelivery
+            {
+                Number = preAbonnement.Antal,
+                Pris = preAbonnement.Produkt.SalgsPris,
+                Produkt = preAbonnement.Produkt.Navn,
+                ProduktNumber = preAbonnement.ProduktNr,
+                Id = preAbonnement.Id,
+                TempAbonnement = 1
             };
         }
     }

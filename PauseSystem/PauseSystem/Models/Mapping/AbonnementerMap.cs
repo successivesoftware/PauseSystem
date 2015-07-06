@@ -1,5 +1,6 @@
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Data.Entity.ModelConfiguration; using PauseSystem.Models.Entity;
+using System.Data.Entity.ModelConfiguration;
+using PauseSystem.Models.Entity;
 
 namespace PauseSystem.Models.Mapping
 {

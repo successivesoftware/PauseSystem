@@ -194,10 +194,12 @@
     <Compile Include="Models\Entity\DriverMessage.cs" />
     <Compile Include="Models\Entity\ExternFragt.cs" />
     <Compile Include="Models\Entity\ExternFragtChauffør.cs" />
+    <Compile Include="Models\Entity\PreAbonnementProdukt.cs" />
     <Compile Include="Models\Enums.cs" />
     <Compile Include="Models\Extensions\AbonnementerExtension.cs" />
     <Compile Include="Models\Extensions\AbonnementProduktExtension.cs" />
     <Compile Include="Models\Extensions\LeveringProduktExtension.cs" />
+    <Compile Include="Models\Extensions\PreAbonnementExtension.cs" />
     <Compile Include="Models\Extensions\ProductExtensions.cs" />
     <Compile Include="Models\FrugtContext.cs" />
     <Compile Include="Models\Entity\Grossister.cs" />
@@ -254,6 +256,7 @@
     <Compile Include="Models\Mapping\PositionMap.cs" />
     <Compile Include="Models\Mapping\PostNrIntervalMap.cs" />
     <Compile Include="Models\Mapping\PostNrKundeMap.cs" />
+    <Compile Include="Models\Mapping\PreAbonnemetProduktMap.cs" />
     <Compile Include="Models\Mapping\PriMap.cs" />
     <Compile Include="Models\Mapping\PriserMap.cs" />
     <Compile Include="Models\Mapping\ProducentMap.cs" />
@@ -372,6 +375,9 @@
     <Content Include="Views\Home\_UCLeveringFilters.cshtml" />
     <Content Include="Views\Home\Subscriptions.cshtml" />
     <Content Include="Views\Shared\_UCCustomerAutoCompleter.cshtml" />
+    <Content Include="Views\Home\PreAbonnement.cshtml" />
+    <Content Include="Views\Shared\_UCAddressAutoCompleter.cshtml" />
+    <Content Include="Views\Shared\_UCProductAutoCompleter.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -1,89 +1,89 @@
 ﻿@model IEnumerable<PauseSystem.Models.Entity.Abonnementer>
-@{
-    ViewBag.Title = "Subscriptions";
-    Layout = "~/Views/Shared/_Layout.cshtml";
-}
+    @{
+        ViewBag.Title = "Subscriptions";
+        Layout = "~/Views/Shared/_Layout.cshtml";
+    }
 
-@if (User.IsInRole(RoleTypes.Employee))
-{
-    using (Html.BeginForm("Subscriptions", "Home", FormMethod.Post))
+    @if (User.IsInRole(RoleTypes.Employee))
     {
-        <div class="form-horizontal">
-            <div class="row">
-                <div class="col-md-6">
-                    <div class="form-group">
-                        <label class="col-sm-3 control-label">Vælg Kunde:</label>
-                        <div class="col-sm-9">
-                           @Html.Partial("_UCCustomerAutoCompleter")
+        using (Html.BeginForm("Subscriptions", "Home", FormMethod.Post))
+        {
+            <div class="form-horizontal">
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label class="col-sm-3 control-label">Vælg Kunde:</label>
+                            <div class="col-sm-9">
+                                @Html.Partial("_UCCustomerAutoCompleter")
+                            </div>
                         </div>
                     </div>
+                    <div class="col-md-4">
+                        <button class="btn btn-primary">Hent Leveringe</button>
+                    </div>
                 </div>
-                <div class="col-md-4">
-                    <button class="btn btn-primary">Hent Leveringe</button>
-                </div>
+
             </div>
-
-        </div>
+        }
     }
-}
 
 
 
-@if (Model.Count() == 0)
-{
-    <p class="norecord">Vælg en kunde at se abonnementer.</p>
-}
-else
-{
+    @if (Model.Count() == 0)
+    {
+        <p class="norecord">Vælg en kunde at se abonnementer.</p>
+    }
+    else
+    {
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-condensed">
-            <tbody>
-                <!-- Group by Address  -->
-                @foreach (var gba in Model.GroupBy(x => x.LeveringsAdresseId))
-                {
-                    <tr class="success">
-                        <td colspan="6">
-                            @gba.First().LeveringsAdresse.Adresse
-                        </td>
-                    </tr>
-
-                <!-- Then Group by Day of Week  -->
-                    foreach (var dow in gba.SelectMany(x => x.AbonnementProdukts).GroupBy(x => x.Abonnement.Ugedag).OrderBy(x => x.Key))
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-condensed">
+                <tbody>
+                    <!-- Group by Address  -->
+                    @foreach (var gba in Model.GroupBy(x => x.LeveringsAdresseId))
                     {
-                        <tr>
-                            <td colspan="6" style="color:red;">
-                                @CustomDateTime.ToCurrentCulture(dow.Key)
+                        <tr class="success">
+                            <td colspan="6">
+                                @gba.First().LeveringsAdresse.Adresse
                             </td>
                         </tr>
 
-                        <tr class="warning">
-                            <td>Product</td>
-                            <td>Amount</td>
-                            <td>Price</td>
-                            <td>Start Date</td>
-                            <td>End Date</td>
-                            <td>Interval</td>
-                        </tr>
-
-                    <!-- Display Result -->
-                        foreach (var abp in dow.Distinct())
+                <!-- Then Group by Day of Week  -->
+                        foreach (var dow in gba.SelectMany(x => x.AbonnementProdukts).GroupBy(x => x.Abonnement.Ugedag).OrderBy(x => x.Key))
                         {
                             <tr>
-                                <td>@abp.Produkt.Navn</td>
-                                <td>@abp.Produkt.GrossistPris</td>
-                                <td>@abp.Produkt.KostPris</td>
-                                <td>@CustomDateTime.ToString(abp.StartDato,CustomDateTimeFormats.DefaultDate)</td>
-                                <td>@CustomDateTime.ToString(abp.SlutDato, CustomDateTimeFormats.DefaultDate)</td>
-                                <td>@abp.Interval</td>
+                                <td colspan="6" style="color:red;">
+                                    @CustomDateTime.ToCurrentCulture(dow.Key)
+                                </td>
                             </tr>
+
+                            <tr class="warning">
+                                <td>Product</td>
+                                <td>Amount</td>
+                                <td>Price</td>
+                                <td>Start Date</td>
+                                <td>End Date</td>
+                                <td>Interval</td>
+                            </tr>
+
+                    <!-- Display Result -->
+                            foreach (var abp in dow.Distinct())
+                            {
+                                <tr>
+                                    <td>@abp.Produkt.Navn</td>
+                                    <td>@abp.Produkt.GrossistPris</td>
+                                    <td>@abp.Produkt.KostPris</td>
+                                    <td>@CustomDateTime.ToString(abp.StartDato, CustomDateTimeFormats.DefaultDate)</td>
+                                    <td>@CustomDateTime.ToString(abp.SlutDato, CustomDateTimeFormats.DefaultDate)</td>
+                                    <td>@abp.Interval</td>
+                                </tr>
+                            }
                         }
+
                     }
+                </tbody>
+            </table>
 
-                }
-            </tbody>
-        </table>
-
-    </div>
-}
+        </div>
+    }
 

@@ -97,6 +97,7 @@ namespace PauseSystem.Models
         public DbSet<SendDeliveryMailRequest> SendDeliveryMailRequests { get; set; }
         public DbSet<SkipList> SkipLists { get; set; }
         public DbSet<smov> smovs { get; set; }
+        public DbSet<PreAbonnementProdukt> PreAbonnements { get; set; }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
@@ -162,6 +163,7 @@ namespace PauseSystem.Models
             modelBuilder.Configurations.Add(new SendDeliveryMailRequestMap());
             modelBuilder.Configurations.Add(new SkipListMap());
             modelBuilder.Configurations.Add(new smovMap());
+            modelBuilder.Configurations.Add(new PreAbonnemetProduktMap());
         }
     }
 }

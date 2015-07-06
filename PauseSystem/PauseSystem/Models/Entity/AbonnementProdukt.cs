@@ -5,7 +5,7 @@ namespace PauseSystem.Models.Entity
 {
     public partial class AbonnementProdukt : BaseEntity
     {
-
+        public int Id { get; set; }
         public int AbonnementId { get; set; }
         public int ProduktNr { get; set; }
         public System.DateTime StartDato { get; set; }

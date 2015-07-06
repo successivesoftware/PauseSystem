@@ -5,7 +5,7 @@ namespace PauseSystem.Models.Entity
 {
     public partial class Abonnementer : BaseEntity
     {
-        
+
         public DayOfWeek Ugedag { get; set; }
         public Nullable<int> RuteNr { get; set; }
         public int RuteIndex { get; set; }

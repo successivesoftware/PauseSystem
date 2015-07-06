@@ -8,7 +8,7 @@ namespace PauseSystem.Models.Mapping
         public AdresserMap()
         {
             // Primary Key
-            this.HasKey(t => t.AdresseId);
+            this.HasKey(t => t.Id);
 
             // Properties
             this.Property(t => t.Adresse)
@@ -28,7 +28,7 @@ namespace PauseSystem.Models.Mapping
 
             // Table & Column Mappings
             this.ToTable("Adresser");
-            this.Property(t => t.AdresseId).HasColumnName("AdresseId");
+            this.Property(t => t.Id).HasColumnName("AdresseId");
             this.Property(t => t.KundeNr).HasColumnName("KundeNr");
             this.Property(t => t.Adresse).HasColumnName("Adresse");
             this.Property(t => t.PostNr).HasColumnName("PostNr");

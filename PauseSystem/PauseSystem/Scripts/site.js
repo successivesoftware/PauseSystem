@@ -13,6 +13,22 @@ function delayExecution(code) {
     setTimeout(code, 10);
 };
 
+var jsAbonnementer = {
+
+    initAddressSearchAutoCompleter: function () {
+        jsAutoCompleter.init('#Adresse', { url: global.mapUrl('Home/AjaxGetAdresse'), displayField: 'DisplayAdresse', selectedField: 'Adresse', valueField: "Id", minLength: 1 }
+            , function (item, that) {
+                document.getElementById("AddressId").value = parseInt(item.Id);
+            });
+    },
+
+    initProduktSearchAutoCompleter: function () {
+        jsAutoCompleter.init('#SearchProdukt', { url: global.mapUrl('Home/AjaxGetProduktForSubscription'), displayField: 'DisplayProdukt', selectedField: 'Name', valueField: "ProduktNr", minLength: 1 }
+            , function (item, that) {
+                document.getElementById("ProduktNr").value = parseInt(item.ProduktNr);
+            });
+    }
+}
 var jsLiverenger = {
     // delete
     deleteDelivery: function (id, jsonResult) {
@@ -39,10 +55,10 @@ var jsLiverenger = {
         }
     },
 
-    changeAntal: function (producktNo, targetId, mode) {
+    changeAntal: function (producktNo, targetId, mode, tempAbonnement, Id) {
         var value = document.getElementById(targetId).innerHTML;
         ajaxLoader.show();
-        $.post('Home/AjaxChangeAntalValue', { produktNumber: producktNo, value: value, mode: mode }, function (result) {
+        $.post('Home/AjaxChangeAntalValue', { produktNumber: producktNo, value: value, mode: mode, tempAbonnement: tempAbonnement, PreAbonnementId: Id }, function (result) {
             ajaxLoader.hide();
             document.getElementById(targetId).innerHTML = result;
         })

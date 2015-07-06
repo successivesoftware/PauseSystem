@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace PauseSystem.Models.Entity
 {
-    public partial class Adresser 
+    public partial class Adresser : BaseEntity
     {
-        public int AdresseId { get; set; }
+        
         public int KundeNr { get; set; }
         public string Adresse { get; set; }
         public string PostNr { get; set; }
