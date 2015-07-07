@@ -13,6 +13,8 @@
         appDateFormat =  '@CustomDateTime.GetFormat(CustomDateTimeFormats.DefaultDate).ToLower().Replace("'","")';
         appDateTimeFormat = '@CustomDateTime.GetFormat(CustomDateTimeFormats.DefaultDateTime).ToLower().Replace("'","")';
         serverResponseMessage = '@TempData["ServerResponseMessage"]';
+        TempData["ServerResponseMessage"] = null;
+
     </script>
 </head>
 <body>

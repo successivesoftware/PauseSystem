@@ -29,7 +29,7 @@ namespace PauseSystem.Controllers
         [AllowAnonymous]
         public ActionResult Index()
         {
-
+            
             if (PauseSecurity.IsAuthenticated)
             {
                 var model = new LeveringModel() { StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(10) };
@@ -65,6 +65,7 @@ namespace PauseSystem.Controllers
             }
 
             model.CustomerDeliveryAdresses = GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
+            
             return View("Levering", model);
         }
 
@@ -103,8 +104,8 @@ namespace PauseSystem.Controllers
             model.CreatedAt = DateTime.Now;
             PreAbonnementRepositry.Insert(model);
             unitOfWork.Commit();
-            
-            return Redirect(UIHelper.MapUrl("home/PreAbonnement"));
+            this.SetResponse("PreAbonnement saved successfully.");
+            return RedirectToAction("PreAbonnement");
         }
 
 

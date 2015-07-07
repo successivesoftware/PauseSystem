@@ -1,4 +1,5 @@
-﻿function executeFunctionByName(functionName) {
+﻿
+function executeFunctionByName(functionName) {
     context = window;
     var args = [].slice.call(arguments).splice(1);
     var namespaces = functionName.split(".");
