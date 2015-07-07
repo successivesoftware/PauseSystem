@@ -1,4 +1,5 @@
-﻿using PauseSystem.Models;
+﻿using PauseSystem.Helpers;
+using PauseSystem.Models;
 using PauseSystem.Models.Entity;
 using PauseSystem.Models.Extensions;
 using System;
@@ -102,7 +103,8 @@ namespace PauseSystem.Controllers
             model.CreatedAt = DateTime.Now;
             PreAbonnementRepositry.Insert(model);
             unitOfWork.Commit();
-            return View();
+            
+            return Redirect(UIHelper.MapUrl("home/PreAbonnement"));
         }
 
 
@@ -321,7 +323,7 @@ namespace PauseSystem.Controllers
 
                 {
                     Id = x.Id,
-                    DisplayAdresse = x.Adresse,
+                    DisplayAdresse = x.Adresse +", " + x.PostNr + ", " + x.City,
                     Adresse = x.Adresse
                 }).ToList();
             return this.ToJsonResult(adress);
