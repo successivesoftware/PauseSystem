@@ -86,7 +86,7 @@ namespace PauseSystem.Models
         {
             return new CustomerDeliverDates()
             {
-                DayOfWeek = preAbonnement.DayOfWeek.ToString(),
+                DayOfWeek = PauseSystem.Helpers.UIHelper.ToSentenceCase(System.Globalization.CultureInfo.GetCultureInfo("da-DK").DateTimeFormat.GetDayName((DayOfWeek)(preAbonnement.DayOfWeek))),
                 Date = preAbonnement.StartDate,
                 DateString = preAbonnement.StartDate.ToShortDateString(),
                 Deliveries = new List<CustomerDelivery> { CustomerDelivery.CreateInstance(preAbonnement) }
