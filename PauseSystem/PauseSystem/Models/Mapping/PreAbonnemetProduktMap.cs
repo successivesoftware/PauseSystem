@@ -22,7 +22,7 @@ namespace PauseSystem.Models.Mapping
             // Table & Column Mappings
             ToTable("PreAbonnementProdukt");
             this.Property(t => t.AddressId).HasColumnName("AddressId");
-            this.Property(t => t.DayOfWeek).HasColumnName("DayOfWeek");
+            this.Property(t => t.DayOfWeek).HasColumnName("Ugedag");
             this.Property(t => t.StartDate).HasColumnName("StartDate");
             this.Property(t => t.EndDate).HasColumnName("EndDate");
             this.Property(t => t.CreatedAt).HasColumnName("CreatedAt");

@@ -23,7 +23,7 @@ var jsAbonnementer = {
     },
 
     initProduktSearchAutoCompleter: function () {
-        jsAutoCompleter.init('#SearchProdukt', { url: global.mapUrl('Home/AjaxGetProduktForSubscription'), displayField: 'DisplayProdukt', selectedField: 'Name', valueField: "ProduktNr", minLength: 1 }
+        jsAutoCompleter.init('#SearchProdukt', { url: global.mapUrl('Home/AjaxGetProduktForPreAbonnement'), displayField: 'DisplayProdukt', selectedField: 'Name', valueField: "ProduktNr", minLength: 1 }
             , function (item, that) {
                 document.getElementById("ProduktNr").value = parseInt(item.ProduktNr);
             });

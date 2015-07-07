@@ -300,7 +300,7 @@ namespace PauseSystem.Controllers
         }
 
         [HttpGet]
-        public JsonResult AjaxGetProduktForSubscription(string query)
+        public JsonResult AjaxGetProduktForPreAbonnement(string query)
         {
             var productName = unitOfWork.Repository<Produkt>().AsQuerable()
                .Where(p => p.Navn.Contains(query)).Take(10).Select(x => new
