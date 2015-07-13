@@ -127,16 +127,6 @@ namespace PauseSystem.Controllers
             result = MergePreAbonnementDeliveries(result, startDate, endDate, kundeId);
             return result;
 
-
-       
-
-            //return result.Union(result1).ToList();
-            //IList<CustomerDeliveryAdresses> result2 = new List<CustomerDeliveryAdresses>();
-            //var preabonnements = new List<PreAbonnement>(); // list
-            //preabonnements = PreAbonnementRepositry.AsQuerable().Where(t => t.Adresser.KundeId == kundeId || t.StartDate >= startDate || t.EndDate <= endDate).ToList();
-            //foreach (var preabonnement in preabonnements)
-            //    result2.Add(CustomerDeliveryAdresses.CreateInstance(preabonnement));
-            //return result1.Union(result2).ToList();
         }
 
         private IList<CustomerDeliveryAdresses> MergePreAbonnementDeliveries(IList<CustomerDeliveryAdresses> deliveries, DateTime startDate, DateTime endDate, int kundeId)
