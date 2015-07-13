@@ -28,7 +28,8 @@ var jsAbonnementer = {
             , function (item, that) {
                 document.getElementById("ProduktNr").value = parseInt(item.ProduktNr);
             });
-    }
+    },
+
 }
 var jsLiverenger = {
     // delete
@@ -65,11 +66,12 @@ var jsLiverenger = {
         })
     },
 
-    addProduct: function (produktNr, containerId) {
+    addProduct: function (produktNr, containerId, adressId, date) {
+       
         if (isNaN(produktNr))
             return responseMessage.showError('Something wrong.');
         ajaxLoader.show();
-        $.post('Home/AjaxAddProduct', { produktNr: produktNr }, function (html) {
+        $.post('Home/AjaxAddProduct', { produktNr: produktNr, adressId: adressId, date: date }, function (html) {
             ajaxLoader.hide();
             $("#" + containerId).before(html);
             $("#" + containerId).find('input').val('');
@@ -83,7 +85,8 @@ var jsLiverenger = {
                     that.value = "";
                 });
                 if (confirm("Are you sure you want to add this produkt?")) {
-                    jsLiverenger.addProduct(item.ProduktNr, that.getAttribute("data-container"));
+                    console.log(that.getAttribute("adressId"));
+                    jsLiverenger.addProduct(item.ProduktNr, that.getAttribute("data-container"), that.getAttribute("adressId"), that.getAttribute("date"));
                 }
             });
     },

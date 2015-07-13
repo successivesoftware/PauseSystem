@@ -101,7 +101,7 @@ namespace PauseSystem.Models
         public int ProduktNumber { get; set; }
         public string Produkt { get; set; }
         public double Pris { get; set; }
-        public int TempAbonnement { get; set; }
+        public int IsPreAbonnement { get; set; }
 
         public static CustomerDelivery CreateInstance(LeveringsProdukt levering)
         {
@@ -112,7 +112,7 @@ namespace PauseSystem.Models
                 Produkt = levering.Produkt.Navn,
                 ProduktNumber = levering.ProduktNr,
                 Id = levering.Id,
-                TempAbonnement = 0
+                IsPreAbonnement = 0
             };
         }
 
@@ -126,7 +126,7 @@ namespace PauseSystem.Models
                 Produkt = preAbonnement.Produkt.Navn,
                 ProduktNumber = preAbonnement.ProduktNr,
                 Id = preAbonnement.Id,
-                TempAbonnement = 1
+                IsPreAbonnement = 1
             };
         }
     }

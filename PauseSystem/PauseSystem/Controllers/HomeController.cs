@@ -17,19 +17,21 @@ namespace PauseSystem.Controllers
         IRepository<LeveringsProdukt> LeveringProduktRepository = null;
         IRepository<Abonnementer> AbonnementerRepository = null;
         IRepository<PreAbonnementProdukt> PreAbonnementRepositry = null;
+        IRepository<Produkt> Produkt = null;
 
         public HomeController()
         {
             LeveringProduktRepository = unitOfWork.Repository<LeveringsProdukt>();
             AbonnementerRepository = unitOfWork.Repository<Abonnementer>();
             PreAbonnementRepositry = unitOfWork.Repository<PreAbonnementProdukt>();
+            Produkt = unitOfWork.Repository<Produkt>();
         }
 
 
         [AllowAnonymous]
         public ActionResult Index()
         {
-            
+
             if (PauseSecurity.IsAuthenticated)
             {
                 var model = new LeveringModel() { StartDate = DateTime.Today, EndDate = DateTime.Today.AddDays(10) };
@@ -65,7 +67,7 @@ namespace PauseSystem.Controllers
             }
 
             model.CustomerDeliveryAdresses = GetCustomerDeliveryAdresses(model.KundeId, model.StartDate, model.EndDate);
-            
+
             return View("Levering", model);
         }
 
@@ -122,18 +124,13 @@ namespace PauseSystem.Controllers
             ViewBag.StartDate = startDate.ToDateString();
             ViewBag.EndDate = endDate.ToDateString();
             var result = LeveringProduktRepository.GetDeliveries(unitOfWork, startDate, endDate, kundeId);
-            foreach (var res in result)
-            {
-                // Get Data for addressId
-                var preabonnements = PreAbonnementRepositry.AsQuerable().Where(x => x.AddressId == res.AdressId);
-                foreach (var preabonnement in preabonnements)
-                {
-                    res.DeliveryWeeks.Add(CustomerDeliveryWeek.CreateInstance(preabonnement));
-
-                }
-
-            }
+            result = MergePreAbonnementDeliveries(result, startDate, endDate, kundeId);
             return result;
+
+
+       
+
+            //return result.Union(result1).ToList();
             //IList<CustomerDeliveryAdresses> result2 = new List<CustomerDeliveryAdresses>();
             //var preabonnements = new List<PreAbonnement>(); // list
             //preabonnements = PreAbonnementRepositry.AsQuerable().Where(t => t.Adresser.KundeId == kundeId || t.StartDate >= startDate || t.EndDate <= endDate).ToList();
@@ -142,6 +139,47 @@ namespace PauseSystem.Controllers
             //return result1.Union(result2).ToList();
         }
 
+        private IList<CustomerDeliveryAdresses> MergePreAbonnementDeliveries(IList<CustomerDeliveryAdresses> deliveries, DateTime startDate, DateTime endDate, int kundeId)
+        {
+            //var deliveries = new List<CustomerDeliveryAdresses>();
+            foreach (var preAbonnement in PreAbonnementRepositry.AsQuerable().Where(p => p.StartDate >= startDate.Date && p.StartDate <= endDate.Date))
+            {
+
+                if (deliveries.Any(m => m.AdressId == preAbonnement.AddressId))
+                {
+                    if (deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                        .DeliveryWeeks.Any(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate)))
+                    {
+                        if (deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                            .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                            .DeliverDates.Any(l => l.Date.Date == preAbonnement.StartDate))
+                        {
+                            deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                                .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                                .DeliverDates.First(l => l.Date.Date == preAbonnement.StartDate)
+                                .Deliveries.Add(CustomerDelivery.CreateInstance(preAbonnement));
+                        }
+                        else
+                        {
+                            deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                                .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                                .DeliverDates.Add(CustomerDeliverDates.CreateInstance(preAbonnement));
+                        }
+                    }
+                    else
+                    {
+                        deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                            .DeliveryWeeks.Add(CustomerDeliveryWeek.CreateInstance(preAbonnement));
+                    }
+                }
+                else
+                {
+                    deliveries.Add(CustomerDeliveryAdresses.CreateInstance(preAbonnement));
+                }
+            }
+            return deliveries.Distinct().ToList();
+
+        }
 
         /// <summary>
         /// returns customer future subscriptions
@@ -274,16 +312,32 @@ namespace PauseSystem.Controllers
         }
 
         [HttpPost]
-        public PartialViewResult AjaxAddProduct(int produktNr)
+        public PartialViewResult AjaxAddProduct(int produktNr, int adressId, DateTime date)
         {
-            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == produktNr);
-            return PartialView("_UCDelivery", new CustomerDelivery
+            var preAbonnement = new PreAbonnementProdukt
             {
-                Number = 1,
-                ProduktNumber = produkt.ProduktNr,
-                Produkt = produkt.Navn,
-                Id = produkt.Id
-            });
+                AddressId = adressId,
+                ProduktNr = produktNr,
+                StartDate = date,
+                EndDate = null,
+                DayOfWeek = (int)date.DayOfWeek,
+                Antal = 1,
+                CreatedAt = DateTime.Now,
+                CreatedBy = User.Identity.Name,
+                Interval = 0,
+                Produkt = Produkt.AsQuerable().Where(x => x.ProduktNr == produktNr).FirstOrDefault()
+            };
+            PreAbonnementRepositry.Insert(preAbonnement);
+            unitOfWork.Commit();
+            var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == produktNr);
+            return PartialView("_UCDelivery", CustomerDelivery.CreateInstance(preAbonnement));
+            //{
+            //    Number = 1,
+            //    ProduktNumber = produkt.ProduktNr,
+            //    Produkt = produkt.Navn,
+            //    Id = produkt.Id
+            //});
+
         }
 
         [HttpPost]
@@ -324,8 +378,8 @@ namespace PauseSystem.Controllers
 
                 {
                     Id = x.Id,
-                    DisplayAdresse = x.Adresse +", " + x.PostNr + ", " + x.City,
-                    Adresse = x.Adresse
+                    DisplayAdresse = x.Adresse + ", " + x.PostNr + ", " + x.City,
+                    Adresse = x.Adresse + ", " + x.PostNr + ", " + x.City
                 }).ToList();
             return this.ToJsonResult(adress);
         }
