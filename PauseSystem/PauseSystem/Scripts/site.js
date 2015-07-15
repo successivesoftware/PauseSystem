@@ -57,13 +57,23 @@ var jsLiverenger = {
         }
     },
 
-    changeAntal: function (producktNo, targetId, mode, tempAbonnement, Id) {
+    changeAntal: function (producktNo, targetId, mode, tempAbonnement, id, addressId, date) {
         var value = document.getElementById(targetId).innerHTML;
         ajaxLoader.show();
-        $.post('Home/AjaxChangeAntalValue', { produktNumber: producktNo, value: value, mode: mode, tempAbonnement: tempAbonnement, PreAbonnementId: Id }, function (result) {
+        if (tempAbonnement == 1)
+        {
+            addressId = null;
+            date = null;
+            producktNo = null;
+        }
+        else
+        {
+            id = null;
+        }
+        $.post('Home/AjaxChangeAntalValue', { produktNumber: producktNo, antalValue: value, mode: mode, preAbonnementId: id, addressId: addressId, date: date }, function (result) {
             ajaxLoader.hide();
             document.getElementById(targetId).innerHTML = result;
-        })
+        });
     },
 
     addProduct: function (produktNr, containerId, adressId, date) {

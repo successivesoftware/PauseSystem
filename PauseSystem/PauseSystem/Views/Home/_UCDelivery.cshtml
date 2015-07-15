@@ -1,60 +1,60 @@
-﻿@model PauseSystem.Models.CustomerDelivery
+﻿@model PauseSystem.Models.CustomerDeliveryDetail
 @{
     var item = Model;
 }
-@if (Model.Id == 0)
+@if (Model.CustomerDelivery.Id == 0)
 {
     return;
 }
 
-@if (item.IsPreAbonnement == 1)
+@if (item.CustomerDelivery.IsPreAbonnement == 1)
 {
-    <tr id="@item.Id" style="background-color:yellow">
+    <tr id="@item.CustomerDelivery.Id" style="background-color:yellow">
     <td>
-        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','+', '@item.IsPreAbonnement', '@item.Id')">
+        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.CustomerDelivery.ProduktNumber','span_@item.CustomerDelivery.Id','+', '@item.CustomerDelivery.IsPreAbonnement', '@item.CustomerDelivery.Id', '@item.AddressId', '@item.Date')" style="text-decoration:none">
             <i class='glyphicon glyphicon-plus '></i>
         </a>
-        <span id="span_@item.Id">@item.Number</span>
-        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','-', '@item.IsPreAbonnement', '@item.Id')"><i class='glyphicon glyphicon-minus'></i></a>
+        <span id="span_@item.CustomerDelivery.Id">@item.CustomerDelivery.Number</span>
+        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.CustomerDelivery.ProduktNumber','span_@item.CustomerDelivery.Id','-', '@item.CustomerDelivery.IsPreAbonnement', '@item.CustomerDelivery.Id', @item.AddressId, '@item.Date')"><i class='glyphicon glyphicon-minus'></i></a>
     </td>
-    <td>@item.ProduktNumber</td>
-    <td>@item.Produkt</td>
-    <td>@item.Pris</td>
-    <td>@item.Pris</td>
+    <td>@item.CustomerDelivery.ProduktNumber</td>
+    <td>@item.CustomerDelivery.Produkt</td>
+    <td>@item.CustomerDelivery.Pris</td>
+    <td>@item.CustomerDelivery.Pris</td>
     <td class="action">
-        @Ajax.ActionHtmlLink("<i class='glyphicon glyphicon-remove'></i>", "AjaxDeleteDelivery", String.Empty, new { id = item.Id },
+        @Ajax.ActionHtmlLink("<i class='glyphicon glyphicon-remove'></i>", "AjaxDeleteDelivery", String.Empty, new { id = item.CustomerDelivery.Id },
             new AjaxOptions
             {
                 HttpMethod = "Post",
                 Confirm = "Do you want to delete this delivery?",
                 LoadingElementId = "bgLoader",
-                OnComplete = String.Format("jsLiverenger.deleteDelivery('{0}',xhr)", item.Id)
+                OnComplete = String.Format("jsLiverenger.deleteDelivery('{0}',xhr)", item.CustomerDelivery.Id)
             }, new { title = "Delete" })
     </td>
 </tr>
 }
 else
 {
-    <tr id="@item.Id">
+    <tr id="@item.CustomerDelivery.Id">
     <td>
-        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','+', '@item.IsPreAbonnement', '@item.Id')">
+        <a class="mr10" href="javascript:jsLiverenger.changeAntal('@item.CustomerDelivery.ProduktNumber','span_@item.CustomerDelivery.Id','+', '@item.CustomerDelivery.IsPreAbonnement', '@item.CustomerDelivery.Id', '@item.AddressId', '@item.Date')" style="text-decoration:none">
             <i class='glyphicon glyphicon-plus '></i>
         </a>
-        <span id="span_@item.Id">@item.Number</span>
-        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.ProduktNumber','span_@item.Id','-', '@item.IsPreAbonnement', '@item.Id')"><i class='glyphicon glyphicon-minus'></i></a>
+        <span id="span_@item.CustomerDelivery.Id">@item.CustomerDelivery.Number</span>
+        <a class="ml10" href="javascript:jsLiverenger.changeAntal('@item.CustomerDelivery.ProduktNumber','span_@item.CustomerDelivery.Id','-', '@item.CustomerDelivery.IsPreAbonnement', '@item.CustomerDelivery.Id', '@item.AddressId', '@item.Date')"><i class='glyphicon glyphicon-minus'></i></a>
     </td>
-    <td>@item.ProduktNumber</td>
-    <td>@item.Produkt</td>
-    <td>@item.Pris</td>
-    <td>@item.Pris</td>
+    <td>@item.CustomerDelivery.ProduktNumber</td>
+    <td>@item.CustomerDelivery.Produkt</td>
+    <td>@item.CustomerDelivery.Pris</td>
+    <td>@item.CustomerDelivery.Pris</td>
     <td class="action">
-        @Ajax.ActionHtmlLink("<i class='glyphicon glyphicon-remove'></i>", "AjaxDeleteDelivery", String.Empty, new { id = item.Id },
+        @Ajax.ActionHtmlLink("<i class='glyphicon glyphicon-remove'></i>", "AjaxDeleteDelivery", String.Empty, new { id = item.CustomerDelivery.Id },
             new AjaxOptions
             {
                 HttpMethod = "Post",
                 Confirm = "Do you want to delete this delivery?",
                 LoadingElementId = "bgLoader",
-                OnComplete = String.Format("jsLiverenger.deleteDelivery('{0}',xhr)", item.Id)
+                OnComplete = String.Format("jsLiverenger.deleteDelivery('{0}',xhr)", item.CustomerDelivery.Id)
             }, new { title = "Delete" })
     </td>
 </tr>

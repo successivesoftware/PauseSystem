@@ -144,6 +144,26 @@ namespace PauseSystem.Controllers
                             .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
                             .DeliverDates.Any(l => l.Date.Date == preAbonnement.StartDate))
                         {
+                            if (deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                                .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                                .DeliverDates.First(l => l.Date.Date == preAbonnement.StartDate)
+                                .Deliveries.Any(x => x.ProduktNumber == preAbonnement.ProduktNr))
+                            {
+                                deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                                .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                                .DeliverDates.First(l => l.Date.Date == preAbonnement.StartDate)
+                                .Deliveries.First(x => x.ProduktNumber == preAbonnement.ProduktNr).Number += preAbonnement.Antal;
+
+
+                                preAbonnement.Antal = deliveries.First(m => m.AdressId == preAbonnement.AddressId)
+                                .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
+                                .DeliverDates.First(l => l.Date.Date == preAbonnement.StartDate)
+                                .Deliveries.First(x => x.ProduktNumber == preAbonnement.ProduktNr).Number;
+
+                                PreAbonnementRepositry.Update(preAbonnement);
+                                // unitOfWork.Commit();
+                                continue;
+                            }
                             deliveries.First(m => m.AdressId == preAbonnement.AddressId)
                                 .DeliveryWeeks.First(dw => dw.Week == Helpers.TimeTool.GetWeekNumber(preAbonnement.StartDate))
                                 .DeliverDates.First(l => l.Date.Date == preAbonnement.StartDate)
@@ -266,39 +286,142 @@ namespace PauseSystem.Controllers
         /// <param name="PreAbonnementId">Pre Abonement Id</param>
         /// <returns></returns>
         [HttpPost]
-        public ActionResult AjaxChangeAntalValue(int produktNumber, int value, string mode, int tempAbonnement, int PreAbonnementId)
+        public ActionResult AjaxChangeAntalValue(int? preAbonnementId, string mode, int antalValue, int? produktNumber, int? addressId, DateTime? date)
         {
-            if (tempAbonnement == 1)
+
+            var dbitem = preAbonnementId.HasValue && preAbonnementId.Value > 0 ? PreAbonnementRepositry.GetById(preAbonnementId.Value)
+                : PreAbonnementRepositry.AsQuerable().Where(x => x.AddressId == addressId && x.StartDate == date && x.ProduktNr == produktNumber).FirstOrDefault();
+            if (dbitem == null)
             {
-                var obj = PreAbonnementRepositry.GetById(PreAbonnementId);
-                if (mode == "+")
+                // create an entry
+                var preAbonnement = new PreAbonnementProdukt
                 {
-                    obj.Antal += 1;
-                    // Write the code to increase Antal value
-                }
-                else if (value > 0)
-                {
-                    obj.Antal -= 1;
-                    // Write the code to decrease Antal value
-                }
-                PreAbonnementRepositry.Update(obj);
-                unitOfWork.Commit();
-                return this.Content(obj.Antal.ToString());
+                    ProduktNr = produktNumber.Value,
+                    AddressId = addressId.Value,
+                    StartDate = date.Value,
+                    Antal = mode == "+" ? (1) : (-1),
+                    DayOfWeek = (int)date.Value.DayOfWeek,
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = User.Identity.Name,
+                    Interval = 0
+                };
+                PreAbonnementRepositry.Insert(preAbonnement);
+                antalValue += preAbonnement.Antal;
             }
             else
             {
-                if (mode == "+")
-                {
-                    value += 1;
-                    // Write the code to increase Antal value
-                }
-                else if (value > 0)
-                {
-                    value -= 1;
-                    // Write the code to decrease Antal value
-                }
-                return this.Content(value.ToString());
+                // update
+                dbitem.Antal += mode == "+" ? 1 : -1;
+                antalValue += mode == "+" ? 1 : -1;
+                PreAbonnementRepositry.Update(dbitem);
             }
+            unitOfWork.Commit();
+            return this.Content(antalValue.ToString());
+            //int antal = 0;
+
+
+            //var details = PreAbonnementRepositry.AsQuerable().ToList();
+            //if (mode == "+")
+            //{
+            //    antal = 1;
+            //}
+            //else if (value > 0)
+            //{
+            //    antal = -1;
+            //}
+            //foreach (var detail in details)
+            //{
+
+            //    if (addressId == detail.AddressId)
+            //    {
+
+            //        if (date == detail.StartDate)
+            //        {
+            //            if (detail.ProduktNr == produktNumber)
+            //            {
+            //                var obj = PreAbonnementRepositry.GetById(PreAbonnementId);
+            //                if (mode == "+")
+            //                {
+            //                    detail.Antal += 1;
+            //                    // Write the code to increase Antal value
+            //                }
+            //                else if (value > 0)
+            //                {
+            //                    detail.Antal -= 1;
+            //                    // Write the code to decrease Antal value
+            //                }
+            //                PreAbonnementRepositry.Update(detail);
+            //                unitOfWork.Commit();
+            //                return this.Content((value + antal).ToString());
+            //            }
+            //        }
+            //        continue;
+            //    }
+
+
+
+
+
+            //    var preAbonnement = new PreAbonnementProdukt
+            //    {
+            //        ProduktNr = produktNumber,
+            //        AddressId = addressId,
+            //        StartDate = date,
+            //        Antal = antal,
+            //        DayOfWeek = (int)date.DayOfWeek,
+            //        CreatedAt = DateTime.Now,
+            //        CreatedBy = User.Identity.Name,
+            //        Interval = 0
+            //    };
+            //    PreAbonnementRepositry.Insert(preAbonnement);
+            //    unitOfWork.Commit();
+            //    return this.Content((detail.Antal + value).ToString());
+            //}
+            //var newPreAbonnement = new PreAbonnementProdukt
+            //{
+            //    ProduktNr = produktNumber,
+            //    AddressId = addressId,
+            //    StartDate = date,
+            //    Antal = antal,
+            //    DayOfWeek = (int)date.DayOfWeek,
+            //    CreatedAt = DateTime.Now,
+            //    CreatedBy = User.Identity.Name,
+            //    Interval = 0
+            //};
+            //PreAbonnementRepositry.Insert(newPreAbonnement);
+            //unitOfWork.Commit();
+            //return this.Content((antal + value).ToString());
+            //if (tempAbonnement == 1)
+            //{
+            //    var obj = PreAbonnementRepositry.GetById(PreAbonnementId);
+            //    if (mode == "+")
+            //    {
+            //        obj.Antal += 1;
+            //        // Write the code to increase Antal value
+            //    }
+            //    else if (value > 0)
+            //    {
+            //        obj.Antal -= 1;
+            //        // Write the code to decrease Antal value
+            //    }
+            //    PreAbonnementRepositry.Update(obj);
+            //    unitOfWork.Commit();
+            //    return this.Content(obj.Antal.ToString());
+            //}
+            //else
+            //{
+            //    if (mode == "+")
+            //    {
+            //        value += 1;
+            //        // Write the code to increase Antal value
+            //    }
+            //    else if (value > 0)
+            //    {
+            //        value -= 1;
+            //        // Write the code to decrease Antal value
+            //    }
+            //    return this.Content(value.ToString());
+            //}
         }
 
         [HttpPost]
@@ -320,7 +443,12 @@ namespace PauseSystem.Controllers
             PreAbonnementRepositry.Insert(preAbonnement);
             unitOfWork.Commit();
             var produkt = unitOfWork.Repository<Produkt>().AsQuerable().FirstOrDefault(x => x.ProduktNr == produktNr);
-            return PartialView("_UCDelivery", CustomerDelivery.CreateInstance(preAbonnement));
+            return PartialView("_UCDelivery", new CustomerDeliveryDetail
+                {
+                    CustomerDelivery = CustomerDelivery.CreateInstance(preAbonnement),
+                    AddressId = adressId,
+                    Date = date
+                });
             //{
             //    Number = 1,
             //    ProduktNumber = produkt.ProduktNr,

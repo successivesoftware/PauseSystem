@@ -53,7 +53,12 @@
 
                                 @foreach (var d in dd.Deliveries)
                                 {
-                                    @Html.Partial("_UCDelivery", d);
+                                    @Html.Partial("_UCDelivery", new PauseSystem.Models.CustomerDeliveryDetail
+                                    {
+                                        CustomerDelivery = d,
+                                        AddressId = cda.AdressId,
+                                        Date = dd.Date
+                                    });
                                 }
 
                                 <tr id="search_@trId">
